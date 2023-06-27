@@ -1,5 +1,6 @@
 import {createClient} from '@supabase/supabase-js';
 import {useState, useEffect, ChangeEvent, FormEvent} from 'react';
+import EditModal from "./EditModal";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_API_KEY = process.env.NEXT_PUBLIC_SUPABASE_API_KEY;
@@ -39,6 +40,16 @@ const HomePage = () => {
             setCards(cards.filter(card => card.id !== id));
         }
     };
+
+    const handleEdit = (id: number) => {
+        const card = cards.find((card) => card.id === id);
+        setCurrentCard(card);
+        setIsEditModalOpen(true);
+    };
+
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [currentCard, setCurrentCard] = useState(null);
+
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setForm({...form, [e.target.name]: e.target.value});
@@ -162,14 +173,23 @@ const HomePage = () => {
                             )}
                             <h2 className="text-xl flex-shrink-0">{card.title}</h2>
                         </div>
-                        <button onClick={() => handleDelete(card.id)} className="px-2 py-1 text-white bg-transparent hover:bg-red-500 rounded hover:text-white">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6 fill-red-600">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                        </button>
+                        <div className="button-container">
+                            <button onClick={() => handleEdit(card.id)} className="px-2 py-1 text-slate-400 bg-transparent hover:bg-green-500 rounded hover:text-white">
+                                Edit
+                            </button>
+                            <button onClick={() => handleDelete(card.id)} className="px-2 py-1 text-white bg-transparent hover:bg-red-500 rounded hover:text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6 fill-red-600">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
+                        </div>
+
                     </div>
                 ))}
             </div>
+            {isEditModalOpen && (
+                <EditModal card={currentCard} onClose={() => setIsEditModalOpen(false)} onSubmit={handleEdit} />
+            )}
         </div>
     );
 };
