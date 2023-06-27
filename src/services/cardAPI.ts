@@ -1,5 +1,30 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import supabase from "./supabaseClient";
+
+export const fetchCard = async (id: number) => {
+    const { data, error } = await supabase.from('card').select().eq('id', id).single();
+    if (error) {
+        console.error('Error fetching card:', error);
+        return null;
+    }
+    return data;
+};
+
+export const updateCard = async (id: number, cardData: {
+    title: string,
+    image_logo: string,
+    card_detail_id: number,
+    card_detail_text: string,
+    card_detail_pictures: string[]
+}) => {
+    const { error } = await supabase.from('card').update(cardData).eq('id', id);
+    if (error) {
+        console.error('Error updating card:', error);
+        return null;
+    }
+    return cardData;
+};
+
 export const fetchCards = async () => {
     const { data, error } = await supabase.from('card').select();
     if (error) {
