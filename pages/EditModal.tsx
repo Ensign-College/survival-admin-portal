@@ -22,18 +22,21 @@ const EditModal: React.FC<EditModalProps> = ({ card, onClose, onSubmit }) => {
         onClose();
     };
 
-    const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
-        card[name] = value;
-    };
-
+      
+        if (name in card) {
+          (card as any)[name] = value;
+        }
+      };
+      
     return (
         <div className="modal-overlay">
             <div className="modal">
                 <div className="modal-content">
                     <div className="modal-close">
                         <button onClick={onClose} className="modal-close-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
                         </button>
@@ -78,7 +81,7 @@ const EditModal: React.FC<EditModalProps> = ({ card, onClose, onSubmit }) => {
                                 name="card_detail_text"
                                 value={card.card_detail_text}
                                 onChange={handleChange}
-                                className="w-full h-32 px-3 py-2 text-gray-700 border rounded resize-y shadow appearance-none focus:outline-none focus:shadow-outline"
+                                className="w-full h-32 px-3 py-2 text-gray-700 border rounded shadow appearance-none resize-y focus:outline-none focus:shadow-outline"
                             ></textarea>
                         </div>
                         <div className="mb-4">
