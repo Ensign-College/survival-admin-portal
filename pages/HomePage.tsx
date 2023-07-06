@@ -5,9 +5,8 @@ import {SUPABASE_API_KEY, SUPABASE_URL} from "../services/supabaseClients";
 import AuthForm from './AuthForm';
 
 const supabase = createClient(SUPABASE_URL as string, SUPABASE_API_KEY as string);
-
 type Card = {
-    id: number,
+    id: number;
     title: string;
     image_logo: string;
     card_detail_id: number;
@@ -34,13 +33,15 @@ const HomePage = () => {
     const handleAuthenticated = () => {
       setIsAuthenticated(true);
     };
-    
+
     const fetchCards = async () => {
         const {data, error} = await supabase.from('card').select();
         if (error) {
             console.error('Error fetching cards:', error);
         } else {
-            setCards([] || data);
+            console.log("cards: ", data);
+            // @ts-ignore
+            setCards(data || [] );
         }
     };
 
@@ -76,7 +77,7 @@ const HomePage = () => {
     const [currentCard, setCurrentCard] = useState(null);
 
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setForm({...form, [e.target.name]: e.target.value});
     };
 
@@ -121,10 +122,8 @@ const HomePage = () => {
         // @ts-ignore
         await supabase.from('card').update([{card_detail_id: firstCardDetail.id}])
             .eq('id', firstCard.id);
-
         // @ts-ignore
         const updatedCard = {...firstCard, card_detail_id: firstCardDetail.id};
-
         // @ts-ignore
         setCards([...cards, updatedCard]);
         resetForm();
@@ -184,6 +183,7 @@ const HomePage = () => {
                             <textarea
                                 name="card_detail_text"
                                 value={form.card_detail_text}
+                                // @ts-ignore
                                 onChange={handleChange}
                                 className="w-full h-32 px-3 py-2 text-gray-700 border rounded shadow appearance-none resize-y focus:outline-none focus:shadow-outline"
                             ></textarea>
@@ -210,7 +210,7 @@ const HomePage = () => {
             </form>
             <div className="space-y-4">
                 {cards.map((card, index) => (
-                    <div key={index} className="flex items-center justify-between p-4 border rounded shadow-lg"
+                    <div key={index} className="flex items-center justify-between p-4 border rounded shadow-lg hover:bg-teal-800 hover:text-white hover:shadow-slate-950 hover:border-transparent"
                          style={{minWidth: '300px'}}>
                         <div className="flex items-center">
                             {card.image_logo === "https://example.com/logo.png" ? (
@@ -241,9 +241,9 @@ const HomePage = () => {
                     </div>
                 ))}
             </div>
-            {isEditModalOpen && currentCard && (
+            {isEditModalOpen && (
                 <EditModal card={currentCard} onClose={() => setIsEditModalOpen(false)} onSubmit={handleEdit}/>
-)}
+            )}
         </div>
                 </div>
                 ) : (
