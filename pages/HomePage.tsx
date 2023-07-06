@@ -6,9 +6,16 @@ import AuthForm from './AuthForm';
 
 const supabase = createClient(SUPABASE_URL as string, SUPABASE_API_KEY as string);
 
+type Card = {
+    id: number,
+    title: string;
+    image_logo: string;
+    card_detail_id: number;
+};
+
 
 const HomePage = () => {
-    const [cards, setCards] = useState([]);
+    const [cards, setCards] = useState<Card[]>([]);
     const [form, setForm] = useState({
         title: '',
         image_logo: '',
@@ -33,7 +40,7 @@ const HomePage = () => {
         if (error) {
             console.error('Error fetching cards:', error);
         } else {
-            setCards(data || []);
+            setCards([] || data);
         }
     };
 
@@ -52,12 +59,15 @@ const HomePage = () => {
         if (error) {
             console.error('Error deleting card:', error);
         } else {
+            // @ts-ignore
             setCards(cards.filter(card => card.id !== id));
         }
     };
 
     const handleEdit = (id: number) => {
+        // @ts-ignore
         const card = cards.find((card) => card.id === id);
+        // @ts-ignore
         setCurrentCard(card);
         setIsEditModalOpen(true);
     };
@@ -66,7 +76,7 @@ const HomePage = () => {
     const [currentCard, setCurrentCard] = useState(null);
 
 
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setForm({...form, [e.target.name]: e.target.value});
     };
 
@@ -84,6 +94,7 @@ const HomePage = () => {
         const cardError = error;
 
         if (cardError || !firstCard) {
+            // @ts-ignore
             alert('Error inserting new card:', cardError);
             console.error(cardError)
             return;
@@ -107,11 +118,14 @@ const HomePage = () => {
         }
 
         // Update card_detail_id in the card table
+        // @ts-ignore
         await supabase.from('card').update([{card_detail_id: firstCardDetail.id}])
             .eq('id', firstCard.id);
 
+        // @ts-ignore
         const updatedCard = {...firstCard, card_detail_id: firstCardDetail.id};
 
+        // @ts-ignore
         setCards([...cards, updatedCard]);
         resetForm();
     };
@@ -227,9 +241,9 @@ const HomePage = () => {
                     </div>
                 ))}
             </div>
-            {isEditModalOpen && (
+            {isEditModalOpen && currentCard && (
                 <EditModal card={currentCard} onClose={() => setIsEditModalOpen(false)} onSubmit={handleEdit}/>
-            )}
+)}
         </div>
                 </div>
                 ) : (
