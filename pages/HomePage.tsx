@@ -3,6 +3,7 @@ import {useState, useEffect, ChangeEvent, FormEvent} from 'react';
 import EditModal from "./EditModal";
 import {SUPABASE_API_KEY, SUPABASE_URL} from "../services/supabaseClients";
 import AuthForm from './AuthForm';
+import MarkdownEditor from "./MarkdownEditor";
 
 const supabase = createClient(SUPABASE_URL as string, SUPABASE_API_KEY as string);
 type Card = {
@@ -180,13 +181,11 @@ const HomePage = () => {
                     {isCardDetailsTextOpen && (
                         <div className="mt-2">
                             <label className="block mb-2 text-sm font-bold text-gray-700">Card Details Text:</label>
-                            <textarea
+                            <MarkdownEditor
                                 name="card_detail_text"
                                 value={form.card_detail_text}
-                                // @ts-ignore
                                 onChange={handleChange}
-                                className="w-full h-32 px-3 py-2 text-gray-700 border rounded shadow appearance-none resize-y focus:outline-none focus:shadow-outline"
-                            ></textarea>
+                            />
                         </div>
                     )}
                 </div>
