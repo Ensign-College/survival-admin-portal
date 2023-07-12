@@ -105,23 +105,18 @@ const HomePage = () => {
             title: form.title,
             pictures: form.card_detail_pictures.split(','),
             card_id: firstCard.id,
-            text: form.card_detail_text
+            text: form.card_detail_text,
         };
 
-        const cardDetailResponse = await supabase.from('card_details').insert([newCardDetails]);
-        const cardDetailData = cardDetailResponse.data;
-        const firstCardDetail = cardDetailData ? cardDetailData[0] : null;
-        const cardDetailError = cardDetailResponse.error;
+        await supabase.from('card_details').insert([newCardDetails]);
 
-        if (cardDetailError || !firstCardDetail) {
-            console.error('Error inserting new card details:', cardDetailError);
-            return;
-        }
-
+        let firstCardDetail = await supabase.from('card_details').select().eq('card_id', firstCard.id).single();
+        console.log("card detail: " + firstCardDetail.data.id);
         // Update card_detail_id in the card table
         // @ts-ignore
-        await supabase.from('card').update([{card_detail_id: firstCardDetail.id}])
+        let response = await supabase.from('card').update([{card_detail_id: firstCardDetail.data.id}])
             .eq('id', firstCard.id);
+        console.log("Response: " + response);
         // @ts-ignore
         const updatedCard = {...firstCard, card_detail_id: firstCardDetail.id};
         // @ts-ignore
