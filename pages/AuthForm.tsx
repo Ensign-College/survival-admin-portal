@@ -12,6 +12,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [rememberMe, setRememberMe] = useState<boolean>(false);
 
   const handleLogin = async () => {
     const supabase = createClient(SUPABASE_URL as string, SUPABASE_API_KEY as string);
@@ -25,6 +26,10 @@ const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
       if (error) {
         setLoading(false);
       } else {
+        if (rememberMe) {
+          const credentials = { email, password };
+          localStorage.setItem('credentials', JSON.stringify(credentials));
+        }
         onAuthenticated();
       }
     } else {
@@ -33,7 +38,12 @@ const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
   };
 
   useEffect(() => {
-    handleLogin();
+    if (localStorage.getItem('credentials')) {
+      const credentials = JSON.parse(localStorage.getItem('credentials') || "");
+      setEmail(credentials.email);
+      setPassword(credentials.password);
+      setRememberMe(true);
+    }
   }, []);
 
   return (
@@ -53,6 +63,14 @@ const AuthForm: React.FC<AuthFormProps> = ({ onAuthenticated }) => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
               />
+              <input
+                  type="checkbox"
+                  id="rememberMe"
+                  name="rememberMe"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+              />
+              <label htmlFor="rememberMe">Remember Me</label>
               <button onClick={handleLogin}>Login</button>
             </div>
         )}
