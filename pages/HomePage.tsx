@@ -131,12 +131,12 @@ const HomePage = () => {
     
 
     return (
-    <div className="bg-white">
-        <h1 className="p-8 pb-0 text-2xl font-bold">Welcome to Survival Admin Portal</h1>
+    <div className="bg-white min-h-screen p-8">
+        <h1 className="pb-8 text-2xl font-bold">Welcome to Survival Admin Portal</h1>
         {isAuthenticated ? (
-        <div className="p-8 flex justify-center flex-col md:flex-row">
+        <div className="p-8 pt-0 flex flex-col md:flex-row">
                 
-                <div className='w-full pr-8'>
+                <div className='w-full md:w-1/3 lg:w-full pr-8'>
                     <h1 className="mb-4 text-4xl">New Card</h1>
                     <form onSubmit={handleSubmit} className="mb-8">
                         <div className="mb-4">
@@ -206,7 +206,7 @@ const HomePage = () => {
                     </form>
                 </div>
             
-                <div className="space-y-4 w-full">
+                <div className="space-y-4 w-full md:w-2/3 lg:w-full">
                     <h1 className="mb-4 text-4xl">Current Cards</h1>
                     {cards.map((card, index) => (
                         <div key={index} className="flex items-center justify-between p-4 border rounded shadow-lg hover:bg-teal-800 hover:text-white hover:shadow-slate-950 hover:border-transparent"
