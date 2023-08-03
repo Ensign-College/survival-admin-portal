@@ -1,22 +1,26 @@
-import React, { ChangeEvent, FormEvent } from 'react';
+import { SupabaseClient } from '@supabase/supabase-js';
+import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 
 interface EditModalProps {
     card: Card | null;
+    supabase: SupabaseClient
     onClose: () => void;
     onSubmit: (id: number) => void;
 }
+const EditModal: React.FC<EditModalProps> = ({ card,supabase, onClose, onSubmit }) => {
 
+    const [cardDetails, setCardDetails] = useState<CardDetails | null>(null);
 
-interface Card {
-    id: number;
-    title: string;
-    image_logo: string;
-    card_detail_id: number;
-    card_detail_text: string;
-    card_detail_pictures: string;
-}
-
-const EditModal: React.FC<EditModalProps> = ({ card, onClose, onSubmit }) => {
+    useEffect(() => {
+        supabase.from('card_details').select().eq('card_id', card?.id).single().then(({ data }) => {
+            console.log("cardDetails: ", data);
+            setCardDetails(data);
+        })
+        if (card && cardDetails) {
+            card.card_detail_text = cardDetails.text;
+        }
+    })
+    
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (card) {
