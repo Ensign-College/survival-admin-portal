@@ -1,15 +1,4 @@
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
-Survival Admin Portal
+## Survival Admin Portal
 The Survival Admin Portal is an admin portal for the survival-guide app, which is an Ensign College mobile app. This portal is designed to manage various aspects of the survival-guide operations and connects with Supabase for data handling.
 
 Installation
@@ -55,4 +44,4 @@ npm run dev
 Visit http://localhost:3000 in your browser to see the application running.
 
 ## Contributing
-Please read our contributing guidelines for details on how to contribute to this project.
+Use ```username/branch_function``` naming convention for your branches. Once you are done create PR for it be reviewed and merged. 
