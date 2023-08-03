@@ -6,9 +6,8 @@ Follow these steps to set up the Survival Admin Portal:
 
 1. Clone the Repository
 ```
-git clone https://github.com/your-organization/survival-admin-portal.git
+git clone https://github.com/ensign-college/survival-admin-portal.git
 cd survival-admin-portal
-Replace your-organization with the correct organization name if applicable.
 ```
 2. Install Dependencies
 Make sure you have Node.js and npm installed, then run:
