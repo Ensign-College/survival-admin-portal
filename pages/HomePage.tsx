@@ -124,6 +124,10 @@ const HomePage = () => {
         resetForm();
     };
 
+    const handleCardUpdate = (updatedCard: Card) => {
+        setCards(prevCards => prevCards.map(card => card.id === updatedCard.id ? updatedCard : card));
+    };
+
 
     const toggleCardDetailsText = () => {
         setIsCardDetailsTextOpen(!isCardDetailsTextOpen);
@@ -242,7 +246,7 @@ const HomePage = () => {
                     ))}
                 </div>
                 {isEditModalOpen && (
-                    <EditModal card={currentCard} supabase={supabase} onClose={() => setIsEditModalOpen(false)} onSubmit={handleEdit}/>
+                    <EditModal card={currentCard} supabase={supabase} onClose={() => setIsEditModalOpen(false)} onUpdate={handleCardUpdate} onSubmit={handleEdit}/>
                 )}
         </div>
         ) : (

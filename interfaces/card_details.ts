@@ -2,7 +2,7 @@ interface CardDetails {
     id: number;
     created_at: string; // You may use Date if you handle date parsing
     title: string;
-    pictures: string;
+    pictures: [string];
     card_id: number;
     text: string;
   }

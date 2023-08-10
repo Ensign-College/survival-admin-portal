@@ -1,15 +1,16 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import EditForm from "../components/forms/EditForm";
 
 interface EditModalProps {
     card: Card | null;
     supabase: SupabaseClient
     onClose: () => void;
     onSubmit: (id: number) => void;
-    onCardUpdate: (updatedCard: Card) => void;
+    onUpdate: (updatedCard: Card) => void; // Add this line
 }
 
-const EditModal: React.FC<EditModalProps> = ({ card,supabase, onClose, onSubmit, onCardUpdate }) => {
+const EditModal: React.FC<EditModalProps> = ({ card,supabase, onClose, onSubmit, onUpdate }) => {
 
     const [cardDetails, setCardDetails] = useState<CardDetails | null>(null);
     const [localCard, setLocalCard] = useState<Card | null>(card);
@@ -24,7 +25,7 @@ const EditModal: React.FC<EditModalProps> = ({ card,supabase, onClose, onSubmit,
 
     useEffect(() => {
         if (card && cardDetails) {
-            setLocalCard({ ...card, card_detail_text: cardDetails.text });
+            setLocalCard({ ...card, card_detail_text: cardDetails.text, card_detail_pictures: cardDetails.pictures.join(',') });
         }
     }, [card, cardDetails]);
 
@@ -68,7 +69,7 @@ const EditModal: React.FC<EditModalProps> = ({ card,supabase, onClose, onSubmit,
                 console.error("An error occurred while updating card details:", cardDetailsError);
             } else {
                 setCardDetails(updatedCardDetails);
-                onCardUpdate(localCard);
+                onUpdate(localCard);
                 console.log("Card details updated successfully");
             }
         }
@@ -83,6 +84,19 @@ const EditModal: React.FC<EditModalProps> = ({ card,supabase, onClose, onSubmit,
         }
     };
 
+    const handleDeleteImage = (imageUrl: string) => {
+        if (localCard) {
+            const cardDetailPicturesArray = localCard.card_detail_pictures.split(',');
+            const newCardDetailPictures = cardDetailPicturesArray.filter((url: string) => url !== imageUrl).join(',');
+            setLocalCard({
+                ...localCard,
+                card_detail_pictures: newCardDetailPictures
+            });
+        }
+    };
+
+
+
 
     return (
         <div className="modal-overlay">
@@ -95,65 +109,7 @@ const EditModal: React.FC<EditModalProps> = ({ card,supabase, onClose, onSubmit,
                     </button>
                     <h2 className='text-2xl font-semibold'>Edit Card</h2>
                 </div>
-                {localCard && (
-                    <form onSubmit={handleSubmit}>
-                        <div className="mb-4">
-                            <label className="block mb-2 text-sm font-bold text-gray-700">Title:</label>
-                            <input
-                                type="text"
-                                name="title"
-                                value={localCard.title}
-                                onChange={handleChange}
-                                className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block mb-2 text-sm font-bold text-gray-700">Image Logo URL:</label>
-                            <input
-                                type="text"
-                                name="image_logo"
-                                value={localCard.image_logo}
-                                onChange={handleChange}
-                                className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block mb-2 text-sm font-bold text-gray-700">Card details id:</label>
-                            <input
-                                type="number"
-                                name="card_detail_id"
-                                value={localCard.card_detail_id}
-                                onChange={handleChange}
-                                className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block mb-2 text-sm font-bold text-gray-700">Card Details Text:</label>
-                            <textarea
-                                name="card_detail_text"
-                                value={localCard.card_detail_text}
-                                onChange={handleChange}
-                                className="w-full h-32 px-3 py-2 text-gray-700 border rounded shadow appearance-none resize-y focus:outline-none focus:shadow-outline"
-                            ></textarea>
-                        </div>
-                        <div className="mb-4">
-                            <label className="block mb-2 text-sm font-bold text-gray-700">Card Detail Pictures (comma separated URLs):</label>
-                            <input
-                                type="text"
-                                name="card_detail_pictures"
-                                value={localCard.card_detail_pictures}
-                                onChange={handleChange}
-                                className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                            />
-                        </div>
-                        <button
-                            type="submit"
-                            className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
-                        >
-                            Submit Edited Card
-                        </button>
-                    </form>
-                )}
+                {localCard && <EditForm localCard={localCard} onSubmit={handleSubmit} handleChange={handleChange} handleDeleteImage={handleDeleteImage} />}
             </div>
         </div>
     );
