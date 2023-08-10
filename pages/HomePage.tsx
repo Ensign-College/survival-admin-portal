@@ -3,6 +3,7 @@ import {useState, useEffect, ChangeEvent, FormEvent} from 'react';
 import EditModal from "./EditModal";
 import {SUPABASE_API_KEY, SUPABASE_URL} from "../services/supabaseClients";
 import AuthForm from './AuthForm';
+import PictureInput from "../components/inputs/PictureInput";
 
 const supabase = createClient(SUPABASE_URL as string, SUPABASE_API_KEY as string);
 type Card = {
@@ -124,6 +125,10 @@ const HomePage = () => {
         resetForm();
     };
 
+    const handleCardUpdate = (updatedCard: Card) => {
+        setCards(prevCards => prevCards.map(card => card.id === updatedCard.id ? updatedCard : card));
+    };
+
 
     const toggleCardDetailsText = () => {
         setIsCardDetailsTextOpen(!isCardDetailsTextOpen);
@@ -131,12 +136,12 @@ const HomePage = () => {
     
 
     return (
-    <div className="bg-white min-h-screen p-8">
+    <div className="min-h-screen p-8 bg-white">
         <h1 className="pb-8 text-2xl font-bold">Welcome to Survival Admin Portal</h1>
         {isAuthenticated ? (
-        <div className="p-8 pt-0 flex flex-col md:flex-row">
+        <div className="p-2 md:p-8 pt-0 flex flex-col md:flex-row">
                 
-                <div className='w-full md:w-1/3 lg:w-full pr-8'>
+                <div className='w-full pr-8 md:w-1/3 lg:w-full'>
                     <h1 className="mb-4 text-4xl">New Card</h1>
                     <form onSubmit={handleSubmit} className="mb-8">
                         <div className="mb-4">
@@ -186,17 +191,7 @@ const HomePage = () => {
                                 </div>
                             )}
                         </div>
-                        <div className="mb-4">
-                            <label className="block mb-2 text-sm font-bold text-gray-700">Card Detail Pictures (comma-separated
-                                URLs):</label>
-                            <input
-                                type="text"
-                                name="card_detail_pictures"
-                                value={form.card_detail_pictures}
-                                onChange={handleChange}
-                                className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                            />
-                        </div>
+                        <PictureInput pictures={form.card_detail_pictures} handleChange={handleChange} />
                         <button
                             type="submit"
                             className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
@@ -206,7 +201,7 @@ const HomePage = () => {
                     </form>
                 </div>
             
-                <div className="space-y-4 w-full md:w-2/3 lg:w-full">
+                <div className="w-full space-y-4 md:w-2/3 lg:w-full">
                     <h1 className="mb-4 text-4xl">Current Cards</h1>
                     {cards.map((card, index) => (
                         <div key={index} className="flex items-center justify-between p-4 border rounded shadow-lg hover:bg-teal-800 hover:text-white hover:shadow-slate-950 hover:border-transparent"
@@ -222,25 +217,27 @@ const HomePage = () => {
                                 )}
                                 <h2 className="flex-shrink-0 text-xl">{card.title}</h2>
                             </div>
-                            <div className="button-container">
+                            <div className="flex button-container">
                                 <button onClick={() => handleEdit(card.id)}
-                                        className="px-2 py-1 bg-transparent rounded text-slate-400 hover:bg-green-500 hover:text-white">
+                                        className="px-2 mr-1 bg-transparent rounded text-slate-400 hover:bg-teal-600 hover:text-white">
                                     Edit
                                 </button>
-                                <button onClick={() => handleDelete(card.id)}
-                                        className="px-2 py-1 text-white bg-transparent rounded hover:bg-red-500 hover:text-white">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke="currentColor" className="w-6 h-6 fill-red-600">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                    </svg>
-                                </button>
+                                <div className="group">
+                                    <button onClick={() => handleDelete(card.id)}
+                                        className="px-2 py-1 text-white bg-transparent rounded group-hover:bg-red-400 group-hover:text-white">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor" className="w-6 h-6 text-red-600 group-hover:fill-red-600 group-hover:text-white">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     ))}
                 </div>
                 {isEditModalOpen && (
-                    <EditModal card={currentCard} onClose={() => setIsEditModalOpen(false)} onSubmit={handleEdit}/>
+                    <EditModal card={currentCard} supabase={supabase} onClose={() => setIsEditModalOpen(false)} onUpdate={handleCardUpdate} onSubmit={handleEdit}/>
                 )}
         </div>
         ) : (
