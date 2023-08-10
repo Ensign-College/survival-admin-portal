@@ -3,6 +3,7 @@ import {useState, useEffect, ChangeEvent, FormEvent} from 'react';
 import EditModal from "./EditModal";
 import {SUPABASE_API_KEY, SUPABASE_URL} from "../services/supabaseClients";
 import AuthForm from './AuthForm';
+import PictureInput from "../components/inputs/PictureInput";
 
 const supabase = createClient(SUPABASE_URL as string, SUPABASE_API_KEY as string);
 type Card = {
@@ -190,17 +191,7 @@ const HomePage = () => {
                                 </div>
                             )}
                         </div>
-                        <div className="mb-4">
-                            <label className="block mb-2 text-sm font-bold text-gray-700">Card Detail Pictures (comma-separated
-                                URLs):</label>
-                            <input
-                                type="text"
-                                name="card_detail_pictures"
-                                value={form.card_detail_pictures}
-                                onChange={handleChange}
-                                className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                            />
-                        </div>
+                        <PictureInput pictures={form.card_detail_pictures} handleChange={handleChange} />
                         <button
                             type="submit"
                             className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
