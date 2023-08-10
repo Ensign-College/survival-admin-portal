@@ -6,39 +6,84 @@ interface EditModalProps {
     supabase: SupabaseClient
     onClose: () => void;
     onSubmit: (id: number) => void;
+    onCardUpdate: (updatedCard: Card) => void;
 }
-const EditModal: React.FC<EditModalProps> = ({ card,supabase, onClose, onSubmit }) => {
+
+const EditModal: React.FC<EditModalProps> = ({ card,supabase, onClose, onSubmit, onCardUpdate }) => {
 
     const [cardDetails, setCardDetails] = useState<CardDetails | null>(null);
+    const [localCard, setLocalCard] = useState<Card | null>(card);
 
     useEffect(() => {
-        supabase.from('card_details').select().eq('card_id', card?.id).single().then(({ data }) => {
-            console.log("cardDetails: ", data);
-            setCardDetails(data);
-        })
-        if (card && cardDetails) {
-            card.card_detail_text = cardDetails.text;
+        if (card?.id) {
+            supabase.from('card_details').select().eq('card_id', card.id).single().then(({ data }) => {
+                setCardDetails(data);
+            })
         }
-    })
-    
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    }, [card]);
+
+    useEffect(() => {
+        if (card && cardDetails) {
+            setLocalCard({ ...card, card_detail_text: cardDetails.text });
+        }
+    }, [card, cardDetails]);
+
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (card) {
-            onSubmit(card.id);
+        if (localCard) {
+            // Update card in Supabase
+            const { error: cardError } = await supabase
+                .from('card')
+                .update({
+                    title: localCard.title,
+                    image_logo: localCard.image_logo,
+                    card_detail_id: localCard.card_detail_id,
+                    last_edited: new Date() // update the last_edited timestamp
+                })
+                .eq('id', localCard.id);
+
+            if (cardError) {
+                console.error("An error occurred while updating card:", cardError);
+            } else {
+                console.log("Card updated successfully");
+            }
+            let cardDetailPicturesArray: string[] = [];
+
+            if (localCard.card_detail_pictures) {
+                // Split the comma-separated string into an array
+                cardDetailPicturesArray = localCard.card_detail_pictures.split(',').map(s => s.trim());
+            }
+
+            // Update card details in Supabase
+            const { data: updatedCardDetails, error: cardDetailsError } = await supabase
+                .from('card_details')
+                .update({
+                    text: localCard.card_detail_text,
+                    pictures: cardDetailPicturesArray,
+                    // ... other fields ...
+                })
+                .eq('card_id', localCard.id);
+
+            if (cardDetailsError) {
+                console.error("An error occurred while updating card details:", cardDetailsError);
+            } else {
+                setCardDetails(updatedCardDetails);
+                onCardUpdate(localCard);
+                console.log("Card details updated successfully");
+            }
         }
         onClose();
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        if (card) {
-            const { name, value } = e.target;
 
-            if (name in card) {
-                (card as any)[name] = value;
-            }
+    const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        if (localCard) {
+            const { name, value } = e.target;
+            setLocalCard({ ...localCard, [name]: value });
         }
     };
-      
+
+
     return (
         <div className="modal-overlay">
             <div className="bg-white w-full lg:w-2/3 m-8 p-8 rounded-xl">
@@ -50,14 +95,14 @@ const EditModal: React.FC<EditModalProps> = ({ card,supabase, onClose, onSubmit 
                     </button>
                     <h2 className='text-2xl font-semibold'>Edit Card</h2>
                 </div>
-                {card && (
+                {localCard && (
                     <form onSubmit={handleSubmit}>
                         <div className="mb-4">
                             <label className="block mb-2 text-sm font-bold text-gray-700">Title:</label>
                             <input
                                 type="text"
                                 name="title"
-                                value={card.title}
+                                value={localCard.title}
                                 onChange={handleChange}
                                 className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
                             />
@@ -67,7 +112,7 @@ const EditModal: React.FC<EditModalProps> = ({ card,supabase, onClose, onSubmit 
                             <input
                                 type="text"
                                 name="image_logo"
-                                value={card.image_logo}
+                                value={localCard.image_logo}
                                 onChange={handleChange}
                                 className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
                             />
@@ -77,30 +122,26 @@ const EditModal: React.FC<EditModalProps> = ({ card,supabase, onClose, onSubmit 
                             <input
                                 type="number"
                                 name="card_detail_id"
-                                value={card.card_detail_id}
+                                value={localCard.card_detail_id}
                                 onChange={handleChange}
                                 className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
                             />
                         </div>
                         <div className="mb-4">
-                            <label className="block mb-2 text-sm font-bold text-gray-700">
-                                Card Details Text:
-                            </label>
+                            <label className="block mb-2 text-sm font-bold text-gray-700">Card Details Text:</label>
                             <textarea
                                 name="card_detail_text"
-                                value={card.card_detail_text}
+                                value={localCard.card_detail_text}
                                 onChange={handleChange}
                                 className="w-full h-32 px-3 py-2 text-gray-700 border rounded shadow appearance-none resize-y focus:outline-none focus:shadow-outline"
                             ></textarea>
                         </div>
                         <div className="mb-4">
-                            <label className="block mb-2 text-sm font-bold text-gray-700">
-                                Card Detail Pictures (comma separated URLs):
-                            </label>
+                            <label className="block mb-2 text-sm font-bold text-gray-700">Card Detail Pictures (comma separated URLs):</label>
                             <input
                                 type="text"
                                 name="card_detail_pictures"
-                                value={card.card_detail_pictures}
+                                value={localCard.card_detail_pictures}
                                 onChange={handleChange}
                                 className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
                             />
@@ -116,6 +157,6 @@ const EditModal: React.FC<EditModalProps> = ({ card,supabase, onClose, onSubmit 
             </div>
         </div>
     );
-};
+}
 
-export default EditModal;
+    export default EditModal;
