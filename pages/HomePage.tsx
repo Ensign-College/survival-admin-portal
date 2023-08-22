@@ -4,7 +4,7 @@ import EditModal from "./EditModal";
 import {SUPABASE_API_KEY, SUPABASE_URL} from "../services/supabaseClients";
 import AuthForm from './AuthForm';
 import PictureInput from "../components/inputs/PictureInput";
-import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 
 const supabase = createClient(SUPABASE_URL as string, SUPABASE_API_KEY as string);
@@ -16,7 +16,7 @@ type Card = {
 };
 
 
-const HomePage = () => {
+const HomePage: React.FC = () => {
     const [cards, setCards] = useState<Card[]>([]);
     const [form, setForm] = useState({
         title: '',
@@ -136,14 +136,14 @@ const HomePage = () => {
         setIsCardDetailsTextOpen(!isCardDetailsTextOpen);
     };
 
-    const onDragEnd = (result: DropResult) => {
+    const handleDragEnd = (result: any) => {
         if (!result.destination) return;
       
-        const reorderedCards = Array.from(cards);
-        const [reorderedCard] = reorderedCards.splice(result.source.index, 1);
-        reorderedCards.splice(result.destination.index, 0, reorderedCard);
+        const updatedCards = Array.from(cards);
+        const [reorderedCard] = updatedCards.splice(result.source.index, 1);
+        updatedCards.splice(result.destination.index, 0, reorderedCard);
       
-        setCards(reorderedCards);
+        setCards(updatedCards);
       };      
     
 
@@ -215,19 +215,19 @@ const HomePage = () => {
             
                 <div className="w-full space-y-4 md:w-2/3 lg:w-full">
                     <h1 className="mb-4 text-4xl">Current Cards</h1>
-                    <DragDropContext onDragEnd={onDragEnd}>
-                        <Droppable droppableId="cardList" direction="vertical">
+                    <DragDropContext onDragEnd={handleDragEnd}>
+                        <Droppable droppableId="cardList">
                         {(provided) => (
-                            <div ref={provided.innerRef} {...provided.droppableProps}>
+                            <div {...provided.droppableProps} ref={provided.innerRef}>
                             {cards.map((card, index) => (
-                                <Draggable key={card.id.toString()} draggableId={card.id.toString()} index={index}>
+                                <Draggable key={card.id} draggableId={card.id.toString()} index={index}>
                                 {(provided) => (
                                     <div
-                                    ref={provided.innerRef}
-                                    {...provided.draggableProps}
-                                    {...provided.dragHandleProps}
-                                    className="flex items-center justify-between p-4 m-4 border rounded shadow-md hover:bg-teal-800 hover:text-white hover:shadow-slate-500 hover:border-transparent"
-                                    style={{ minWidth: '300px' }}
+                                        ref={provided.innerRef}
+                                        {...provided.draggableProps}
+                                        {...provided.dragHandleProps}
+                                        className="flex items-center justify-between p-4 m-4 border rounded shadow-md hover:bg-teal-800 hover:text-white hover:shadow-slate-500 hover:border-transparent"
+                                        style={{ minWidth: '300px' }}
                                     >
                                         <div className="flex items-center">
                                             {card.image_logo === "https://example.com/logo.png" ? (
@@ -261,7 +261,7 @@ const HomePage = () => {
                                 </Draggable>
                             ))}
                             {provided.placeholder}
-                            </div>
+                        </div>
                         )}
                         </Droppable>
                     </DragDropContext>  
