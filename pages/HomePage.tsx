@@ -140,7 +140,7 @@ const toggleCardDetailsText = () => {
     setIsCardDetailsTextOpen(!isCardDetailsTextOpen);
 };
 
-  const handleDragEnd = (result: any) => {
+const handleDragEnd = (result: any) => {
     if (!result.destination) {
       return;
     }
@@ -150,7 +150,27 @@ const toggleCardDetailsText = () => {
     updatedCards.splice(result.destination.index, 0, reorderedCard);
 
     setCards(updatedCards);
-  };
+    //reorderCards({updatedCards, result});
+};
+
+const reorderCards = ({updatedCards, result}: any) => {
+    var index;
+    var endIndex;
+    if (result.sorce.index < result.destination.index) {
+        index = result.sorce.index;
+        endIndex = result.destination.index;
+    } else {
+        index = result.desination.index;
+        endIndex = result.source.index;
+    }
+    
+    console.log("UPDATED CARDS:"); //debug
+    for (index; index < endIndex; index++) {
+        const card = updatedCards[index];
+        card.order_id = index;
+        console.log(card.title + " - " + card.order_id); //debug
+    }
+};
 
   return (
     <div className="min-h-screen p-8 bg-white">
