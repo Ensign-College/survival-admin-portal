@@ -14,4 +14,5 @@ interface CardDetails {
     card_detail_id: number;
     card_detail_text: string;
     card_detail_pictures: string;
+    order_id: number;
 }

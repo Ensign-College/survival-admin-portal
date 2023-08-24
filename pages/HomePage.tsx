@@ -13,6 +13,7 @@ type Card = {
     title: string;
     image_logo: string;
     card_detail_id: number;
+    order_id: number;
 };
 
 const HomePage: React.FC = () => {
@@ -22,7 +23,8 @@ const HomePage: React.FC = () => {
     image_logo: '',
     card_detail_id: 0,
     card_detail_text: '',         // Initialize the card detail text field
-    card_detail_pictures: ''      // Initialize the card detail pictures field
+    card_detail_pictures: '',      // Initialize the card detail pictures field
+    order_id: 0
 });
 const [isCardDetailsTextOpen, setIsCardDetailsTextOpen] = useState(false);
 
@@ -53,7 +55,8 @@ const resetForm = () => {
         image_logo: '',
         card_detail_id: 0,
         card_detail_text: '',
-        card_detail_pictures: ''
+        card_detail_pictures: '',
+        order_id: 0
     });
 };
 
@@ -94,6 +97,7 @@ const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 
     const { data, error } = await supabase.from('card').insert([newCard]).select();
     const firstCard = data ? data[0] : null;
+    const lastCard = data ? data[data.length-1] : -1;
     const cardError = error;
 
     if (cardError || !firstCard) {
@@ -108,6 +112,7 @@ const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         pictures: form.card_detail_pictures.split(','),
         card_id: firstCard.id,
         text: form.card_detail_text,
+        order_id: lastCard.order_id + 1
     };
 
     await supabase.from('card_details').insert([newCardDetails]);
@@ -151,128 +156,156 @@ const toggleCardDetailsText = () => {
     <div className="min-h-screen p-8 bg-white">
         <h1 className="pb-8 text-2xl font-bold">Welcome to Survival Admin Portal</h1>
         {isAuthenticated ? (
-        <div className="p-2 md:p-8 pt-0 flex flex-col md:flex-row">
-                
-                <div className='w-full pr-8 md:w-1/3 lg:w-full'>
-                    <h1 className="mb-4 text-4xl">New Card</h1>
-                    <form onSubmit={handleSubmit} className="mb-8">
-                        <div className="mb-4">
-                            <label className="block mb-2 text-sm font-bold text-gray-700">Title:</label>
-                            <input
-                                type="text"
-                                name="title"
-                                value={form.title}
-                                onChange={handleChange}
-                                className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block mb-2 text-sm font-bold text-gray-700">Image Logo URL:</label>
-                            <input
-                                type="text"
-                                name="image_logo"
-                                value={form.image_logo}
-                                onChange={handleChange}
-                                className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block mb-2 text-sm font-bold text-gray-700">Card details id:</label>
-                            <input
-                                type="number"
-                                name="card_detail_id"
-                                value={form.card_detail_id}
-                                onChange={handleChange}
-                                className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <button onClick={toggleCardDetailsText} className="text-blue-500 hover:underline">
-                                {isCardDetailsTextOpen ? 'Collapse' : 'Add Card Details Text'}
-                            </button>
-                            {isCardDetailsTextOpen && (
-                                <div className="mt-2">
-                                    <label className="block mb-2 text-sm font-bold text-gray-700">Card Details Text:</label>
-                                    <textarea
-                                        name="card_detail_text"
-                                        value={form.card_detail_text}
-                                        // @ts-ignore
-                                        onChange={handleChange}
-                                        className="w-full h-32 px-3 py-2 text-gray-700 border rounded shadow appearance-none resize-y focus:outline-none focus:shadow-outline"
-                                    ></textarea>
-                                </div>
-                            )}
-                        </div>
-                        <PictureInput pictures={form.card_detail_pictures} handleChange={handleChange} />
-                        <button
-                            type="submit"
-                            className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
-                        >
-                            Insert New Card
-                        </button>
-                    </form>
-                </div>
-            
-                <div className="w-full space-y-4 md:w-2/3 lg:w-full">
-                    <h1 className="mb-4 text-4xl">Current Cards</h1>
-                        <DragDropContext onDragEnd={handleDragEnd}>
-                        <Droppable droppableId="droppable" direction="vertical">
-                            {(provided) => (
-                            <div {...provided.droppableProps} ref={provided.innerRef}>
-                                {cards.map((card, index) => (
-                                <Draggable key={card.id} draggableId={card.id.toString()} index={index}>
-                                    {(provided) => (
-                                        <div
-                                            ref={provided.innerRef}
-                                            {...provided.draggableProps}
-                                            {...provided.dragHandleProps}
-                                            className="flex items-center justify-between p-4 m-4 border rounded shadow-md hover:bg-teal-800 hover:text-white hover:shadow-slate-500 hover:border-transparent"
-                                        >
-                                        <div className="flex items-center">
-                                            {card.image_logo === "https://example.com/logo.png" ? (
-                                                <div className="flex items-center justify-center w-16 h-16 mr-4 bg-gray-200">
-                                                    <span className="text-gray-400">No Image</span>
-                                                </div>
-                                            ) : (
-                                                <img src={card.image_logo} alt={card.title}
-                                                    className="object-cover w-16 h-16 max-w-full max-h-full mr-4"/>
-                                            )}
-                                            <h2 className="flex-shrink-0 text-xl">{card.title}</h2>
-                                        </div>
-                                        <div className="flex button-container">
-                                            <button onClick={() => handleEdit(card.id)}
-                                                    className="px-2 mr-1 bg-transparent rounded text-slate-400 hover:bg-teal-600 hover:text-white">
-                                                Edit
-                                            </button>
-                                            <div className="group">
-                                                <button onClick={() => handleDelete(card.id)}
-                                                    className="px-2 py-1 text-white bg-transparent rounded group-hover:bg-red-400 group-hover:text-white">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                        stroke="currentColor" className="w-6 h-6 text-red-600 group-hover:fill-red-600 group-hover:text-white">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                        </div>                                    </div>
-                                    )}
-                                </Draggable>
-                                ))}
-                                {provided.placeholder}
-                            </div>
-                            )}
-                        </Droppable>
-                        </DragDropContext>
-                    </div>
-                {isEditModalOpen && (
-                    <EditModal card={currentCard} supabase={supabase} onClose={() => setIsEditModalOpen(false)} onUpdate={handleCardUpdate} onSubmit={handleEdit}/>
-                )}
+        <div className="p-2 md:p-8 pt-0 flex flex-col md:flex-row"> 
+            <div className='w-full pr-8 md:w-1/3 lg:w-full'>
+                <NewCardForm
+                    form={form}
+                    handleChange={handleChange}
+                    handleSubmit={handleSubmit}
+                    isCardDetailsTextOpen={isCardDetailsTextOpen}
+                    toggleCardDetailsText={toggleCardDetailsText}
+                />
+            </div>
+            <div className="w-full space-y-4 md:w-2/3 lg:w-full">
+                <CurrentCards
+                    cards={cards}
+                    handleEdit={handleEdit}
+                    handleDelete={handleDelete}
+                    handleDragEnd={handleDragEnd}
+                />
+            </div>
+            {isEditModalOpen && (
+                <EditModal card={currentCard} supabase={supabase} onClose={() => setIsEditModalOpen(false)} onUpdate={handleCardUpdate} onSubmit={handleEdit}/>
+            )}
         </div>
         ) : (
-        <AuthForm onAuthenticated={handleAuthenticated} />
+            <AuthForm onAuthenticated={handleAuthenticated} />
         )}
     </div>
     );
 };
 
 export default HomePage;
+
+
+function NewCardForm({ form, handleChange, handleSubmit, isCardDetailsTextOpen, toggleCardDetailsText }: any) {
+    return (
+        <div className='w-full pr-8 md:w-1/3 lg:w-full'>
+            <h1 className="mb-4 text-4xl">New Card</h1>
+            <form onSubmit={handleSubmit} className="mb-8">
+                <div className="mb-4">
+                    <label className="block mb-2 text-sm font-bold text-gray-700">Title:</label>
+                    <input
+                        type="text"
+                        name="title"
+                        value={form.title}
+                        onChange={handleChange}
+                        className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block mb-2 text-sm font-bold text-gray-700">Image Logo URL:</label>
+                    <input
+                        type="text"
+                        name="image_logo"
+                        value={form.image_logo}
+                        onChange={handleChange}
+                        className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block mb-2 text-sm font-bold text-gray-700">Card details id:</label>
+                    <input
+                        type="number"
+                        name="card_detail_id"
+                        value={form.card_detail_id}
+                        onChange={handleChange}
+                        className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                    />
+                </div>
+                <div className="mb-4">
+                    <button onClick={toggleCardDetailsText} className="text-blue-500 hover:underline">
+                        {isCardDetailsTextOpen ? 'Collapse' : 'Add Card Details Text'}
+                    </button>
+                    {isCardDetailsTextOpen && (
+                        <div className="mt-2">
+                            <label className="block mb-2 text-sm font-bold text-gray-700">Card Details Text:</label>
+                            <textarea
+                                name="card_detail_text"
+                                value={form.card_detail_text}
+                                // @ts-ignore
+                                onChange={handleChange}
+                                className="w-full h-32 px-3 py-2 text-gray-700 border rounded shadow appearance-none resize-y focus:outline-none focus:shadow-outline"
+                            ></textarea>
+                        </div>
+                    )}
+                </div>
+                <PictureInput pictures={form.card_detail_pictures} handleChange={handleChange} />
+                <button
+                    type="submit"
+                    className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+                >
+                    Insert New Card
+                </button>
+            </form>
+        </div>
+    );
+}
+
+function CurrentCards({ cards, handleEdit, handleDelete, handleDragEnd }: any) {
+    return (
+        <div className="w-full space-y-4 md:w-2/3 lg:w-full">
+            <h1 className="mb-4 text-4xl">Current Cards</h1>
+            <DragDropContext onDragEnd={handleDragEnd}>
+                <Droppable droppableId="droppable" direction="vertical">
+                    {(provided) => (
+                    <div {...provided.droppableProps} ref={provided.innerRef}>
+                        {cards.map((card:Card, index:number) => (
+                        <Draggable key={card.order_id} draggableId={card.order_id.toString()} index={index}>
+                            {(provided) => (
+                                <div
+                                    ref={provided.innerRef}
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                    className="flex items-center justify-between p-4 m-4 border rounded shadow-md hover:bg-teal-800 hover:text-white hover:shadow-slate-500 hover:border-transparent"
+                                >
+                                <div className="flex items-center">
+                                    {card.image_logo === "https://example.com/logo.png" ? (
+                                        <div className="flex items-center justify-center w-16 h-16 mr-4 bg-gray-200">
+                                            <span className="text-gray-400">No Image</span>
+                                        </div>
+                                    ) : (
+                                        // eslint-disable-next-line @next/next/no-img-element
+                                        <img src={card.image_logo} alt={card.title}
+                                            className="object-cover w-16 h-16 max-w-full max-h-full mr-4"/>
+                                    )}
+                                    <h2 className="flex-shrink-0 text-xl">{card.title}</h2>
+                                </div>
+                                <div className="flex button-container">
+                                    <button onClick={() => handleEdit(card.id)}
+                                            className="px-2 mr-1 bg-transparent rounded text-slate-400 hover:bg-teal-600 hover:text-white">
+                                        Edit
+                                    </button>
+                                    <div className="group">
+                                        <button onClick={() => handleDelete(card.id)}
+                                            className="px-2 py-1 text-white bg-transparent rounded group-hover:bg-red-400 group-hover:text-white">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke="currentColor" className="w-6 h-6 text-red-600 group-hover:fill-red-600 group-hover:text-white">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            )}
+                        </Draggable>
+                        ))}
+                        {provided.placeholder}
+                    </div>
+                    )}
+                </Droppable>
+            </DragDropContext>
+        </div>
+    );
+}
