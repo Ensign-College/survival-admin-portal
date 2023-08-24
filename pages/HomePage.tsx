@@ -15,139 +15,139 @@ type Card = {
     card_detail_id: number;
 };
 
-
 const HomePage: React.FC = () => {
-    const [cards, setCards] = useState<Card[]>([]);
-    const [form, setForm] = useState({
+  const [cards, setCards] = useState<Card[]>([]);
+  const [form, setForm] = useState({
+    title: '',
+    image_logo: '',
+    card_detail_id: 0,
+    card_detail_text: '',         // Initialize the card detail text field
+    card_detail_pictures: ''      // Initialize the card detail pictures field
+});
+const [isCardDetailsTextOpen, setIsCardDetailsTextOpen] = useState(false);
+
+useEffect(() => {
+    fetchCards();
+}, []);
+
+const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+
+const handleAuthenticated = () => {
+  setIsAuthenticated(true);
+};
+
+const fetchCards = async () => {
+    const {data, error} = await supabase.from('card').select();
+    if (error) {
+        console.error('Error fetching cards:', error);
+    } else {
+        console.log("cards: ", data);
+        // @ts-ignore
+        setCards(data || [] );
+    }
+};
+
+const resetForm = () => {
+    setForm({
         title: '',
         image_logo: '',
         card_detail_id: 0,
-        card_detail_text: '',         // Initialize the card detail text field
-        card_detail_pictures: ''      // Initialize the card detail pictures field
+        card_detail_text: '',
+        card_detail_pictures: ''
     });
-    const [isCardDetailsTextOpen, setIsCardDetailsTextOpen] = useState(false);
+};
 
-    useEffect(() => {
-        fetchCards();
-    }, []);
-
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-
-    const handleAuthenticated = () => {
-      setIsAuthenticated(true);
-    };
-
-    const fetchCards = async () => {
-        const {data, error} = await supabase.from('card').select();
-        if (error) {
-            console.error('Error fetching cards:', error);
-        } else {
-            console.log("cards: ", data);
-            // @ts-ignore
-            setCards(data || [] );
-        }
-    };
-
-    const resetForm = () => {
-        setForm({
-            title: '',
-            image_logo: '',
-            card_detail_id: 0,
-            card_detail_text: '',
-            card_detail_pictures: ''
-        });
-    };
-
-    const handleDelete = async (id: number) => {
-        const {error} = await supabase.from('card').delete().match({id});
-        if (error) {
-            console.error('Error deleting card:', error);
-        } else {
-            // @ts-ignore
-            setCards(cards.filter(card => card.id !== id));
-        }
-    };
-
-    const handleEdit = (id: number) => {
+const handleDelete = async (id: number) => {
+    const {error} = await supabase.from('card').delete().match({id});
+    if (error) {
+        console.error('Error deleting card:', error);
+    } else {
         // @ts-ignore
-        const card = cards.find((card) => card.id === id);
+        setCards(cards.filter(card => card.id !== id));
+    }
+};
+
+const handleEdit = (id: number) => {
+    // @ts-ignore
+    const card = cards.find((card) => card.id === id);
+    // @ts-ignore
+    setCurrentCard(card);
+    setIsEditModalOpen(true);
+};
+
+const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+const [currentCard, setCurrentCard] = useState(null);
+
+
+const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setForm({...form, [e.target.name]: e.target.value});
+};
+
+const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (form.card_detail_text.trim() === '') {
+        alert('Card detail text is required');
+        return;
+    }
+    const newCard = {title: form.title, image_logo: form.image_logo};
+
+    const { data, error } = await supabase.from('card').insert([newCard]).select();
+    const firstCard = data ? data[0] : null;
+    const cardError = error;
+
+    if (cardError || !firstCard) {
         // @ts-ignore
-        setCurrentCard(card);
-        setIsEditModalOpen(true);
+        alert('Error inserting new card:', cardError);
+        console.error(cardError)
+        return;
+    }
+
+    const newCardDetails = {
+        title: form.title,
+        pictures: form.card_detail_pictures.split(','),
+        card_id: firstCard.id,
+        text: form.card_detail_text,
     };
 
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    const [currentCard, setCurrentCard] = useState(null);
+    await supabase.from('card_details').insert([newCardDetails]);
+
+    let firstCardDetail = await supabase.from('card_details').select().eq('card_id', firstCard.id).single();
+    console.log("card detail: " + firstCardDetail.data.id);
+    // Update card_detail_id in the card table
+    // @ts-ignore
+    let response = await supabase.from('card').update([{card_detail_id: firstCardDetail.data.id}])
+        .eq('id', firstCard.id);
+    console.log("Response: " + response);
+    // @ts-ignore
+    const updatedCard = {...firstCard, card_detail_id: firstCardDetail.id};
+    // @ts-ignore
+    setCards([...cards, updatedCard]);
+    resetForm();
+};
+
+const handleCardUpdate = (updatedCard: Card) => {
+    setCards(prevCards => prevCards.map(card => card.id === updatedCard.id ? updatedCard : card));
+};
 
 
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setForm({...form, [e.target.name]: e.target.value});
-    };
+const toggleCardDetailsText = () => {
+    setIsCardDetailsTextOpen(!isCardDetailsTextOpen);
+};
 
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+  const handleDragEnd = (result: any) => {
+    if (!result.destination) {
+      return;
+    }
 
-        if (form.card_detail_text.trim() === '') {
-            alert('Card detail text is required');
-            return;
-        }
-        const newCard = {title: form.title, image_logo: form.image_logo};
+    const updatedCards = Array.from(cards);
+    const [reorderedCard] = updatedCards.splice(result.source.index, 1);
+    updatedCards.splice(result.destination.index, 0, reorderedCard);
 
-        const { data, error } = await supabase.from('card').insert([newCard]).select();
-        const firstCard = data ? data[0] : null;
-        const cardError = error;
+    setCards(updatedCards);
+  };
 
-        if (cardError || !firstCard) {
-            // @ts-ignore
-            alert('Error inserting new card:', cardError);
-            console.error(cardError)
-            return;
-        }
-
-        const newCardDetails = {
-            title: form.title,
-            pictures: form.card_detail_pictures.split(','),
-            card_id: firstCard.id,
-            text: form.card_detail_text,
-        };
-
-        await supabase.from('card_details').insert([newCardDetails]);
-
-        let firstCardDetail = await supabase.from('card_details').select().eq('card_id', firstCard.id).single();
-        console.log("card detail: " + firstCardDetail.data.id);
-        // Update card_detail_id in the card table
-        // @ts-ignore
-        let response = await supabase.from('card').update([{card_detail_id: firstCardDetail.data.id}])
-            .eq('id', firstCard.id);
-        console.log("Response: " + response);
-        // @ts-ignore
-        const updatedCard = {...firstCard, card_detail_id: firstCardDetail.id};
-        // @ts-ignore
-        setCards([...cards, updatedCard]);
-        resetForm();
-    };
-
-    const handleCardUpdate = (updatedCard: Card) => {
-        setCards(prevCards => prevCards.map(card => card.id === updatedCard.id ? updatedCard : card));
-    };
-
-
-    const toggleCardDetailsText = () => {
-        setIsCardDetailsTextOpen(!isCardDetailsTextOpen);
-    };
-
-    const handleDragEnd = (result: any) => {
-        if (!result.destination) return;
-      
-        const updatedCards = Array.from(cards);
-        const [reorderedCard] = updatedCards.splice(result.source.index, 1);
-        updatedCards.splice(result.destination.index, 0, reorderedCard);
-      
-        setCards(updatedCards);
-      };      
-    
-
-    return (
+  return (
     <div className="min-h-screen p-8 bg-white">
         <h1 className="pb-8 text-2xl font-bold">Welcome to Survival Admin Portal</h1>
         {isAuthenticated ? (
@@ -215,20 +215,19 @@ const HomePage: React.FC = () => {
             
                 <div className="w-full space-y-4 md:w-2/3 lg:w-full">
                     <h1 className="mb-4 text-4xl">Current Cards</h1>
-                    <DragDropContext onDragEnd={handleDragEnd}>
-                        <Droppable droppableId="cardList">
-                        {(provided) => (
+                        <DragDropContext onDragEnd={handleDragEnd}>
+                        <Droppable droppableId="droppable" direction="vertical">
+                            {(provided) => (
                             <div {...provided.droppableProps} ref={provided.innerRef}>
-                            {cards.map((card, index) => (
+                                {cards.map((card, index) => (
                                 <Draggable key={card.id} draggableId={card.id.toString()} index={index}>
-                                {(provided) => (
-                                    <div
-                                        ref={provided.innerRef}
-                                        {...provided.draggableProps}
-                                        {...provided.dragHandleProps}
-                                        className="flex items-center justify-between p-4 m-4 border rounded shadow-md hover:bg-teal-800 hover:text-white hover:shadow-slate-500 hover:border-transparent"
-                                        style={{ minWidth: '300px' }}
-                                    >
+                                    {(provided) => (
+                                        <div
+                                            ref={provided.innerRef}
+                                            {...provided.draggableProps}
+                                            {...provided.dragHandleProps}
+                                            className="flex items-center justify-between p-4 m-4 border rounded shadow-md hover:bg-teal-800 hover:text-white hover:shadow-slate-500 hover:border-transparent"
+                                        >
                                         <div className="flex items-center">
                                             {card.image_logo === "https://example.com/logo.png" ? (
                                                 <div className="flex items-center justify-center w-16 h-16 mr-4 bg-gray-200">
@@ -255,17 +254,16 @@ const HomePage: React.FC = () => {
                                                     </svg>
                                                 </button>
                                             </div>
-                                        </div>
-                                    </div>
-                                )}
+                                        </div>                                    </div>
+                                    )}
                                 </Draggable>
-                            ))}
-                            {provided.placeholder}
-                        </div>
-                        )}
+                                ))}
+                                {provided.placeholder}
+                            </div>
+                            )}
                         </Droppable>
-                    </DragDropContext>  
-                </div>
+                        </DragDropContext>
+                    </div>
                 {isEditModalOpen && (
                     <EditModal card={currentCard} supabase={supabase} onClose={() => setIsEditModalOpen(false)} onUpdate={handleCardUpdate} onSubmit={handleEdit}/>
                 )}
