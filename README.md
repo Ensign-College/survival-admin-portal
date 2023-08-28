@@ -1,3 +1,5 @@
+## [Project board](https://github.com/orgs/Ensign-College/projects/1)
+
 ## Survival Admin Portal
 
 The Survival Admin Portal is an admin portal for the survival-guide app, which is an Ensign College mobile app. This portal is designed to manage various aspects of the survival-guide operations and connects with Supabase for data handling.
@@ -51,5 +53,7 @@ npm run dev
 Visit http://localhost:3000 in your browser to see the application running.
 
 ## Contributing
+
+Use `username/branch_function` naming convention for your branches. Once you are done create PR for it be reviewed and merged.
 
 Use `username/branch_function` naming convention for your branches. Once you are done create PR for it be reviewed and merged.
