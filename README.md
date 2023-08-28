@@ -1,3 +1,4 @@
+## [Project board](https://github.com/orgs/Ensign-College/projects/1)
 ## Survival Admin Portal
 The Survival Admin Portal is an admin portal for the survival-guide app, which is an Ensign College mobile app. This portal is designed to manage various aspects of the survival-guide operations and connects with Supabase for data handling.
 
