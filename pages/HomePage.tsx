@@ -150,7 +150,7 @@ const HomePage = () => {
   }
 
   return (
-    <div className="h-screen min-h-screen bg-white p-8">
+    <div className="h-full min-h-screen bg-white p-8">
       <h1 className="pb-8 text-2xl font-bold">
         Welcome to Survival Admin Portal
       </h1>
