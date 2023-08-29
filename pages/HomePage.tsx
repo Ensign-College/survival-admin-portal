@@ -83,10 +83,7 @@ const HomePage = () => {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
-  const handlePictureDelete = (url: string) => {
-    // const updatedForm = form.filter((item) => item.url !== urlToDelete)
-    // setForm(updatedForm)
-  }
+  const handlePictureDelete = (url: string) => {}
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -153,17 +150,17 @@ const HomePage = () => {
   }
 
   return (
-    <div className="min-h-screen p-8 bg-white">
-      <h1 className="pb-8 text-2xl font-bold">
+    <div className="h-screen min-h-screen bg-white p-8">
+      <h1 className="font-bolds pb-8 text-2xl">
         Welcome to Survival Admin Portal
       </h1>
       {isAuthenticated ? (
-        <div className="p-2 md:p-8 pt-0 flex flex-col md:flex-row">
+        <div className="flex flex-col p-2 pt-0 md:flex-row md:p-8">
           <div className="w-full pr-8 md:w-1/3 lg:w-full">
             <h1 className="mb-4 text-4xl">New Card</h1>
             <form onSubmit={handleSubmit} className="mb-8">
               <div className="mb-4">
-                <label className="block mb-2 text-sm font-bold text-gray-700">
+                <label className="mb-2 block text-sm font-bold text-gray-700">
                   Title:
                 </label>
                 <input
@@ -171,11 +168,11 @@ const HomePage = () => {
                   name="title"
                   value={form.title}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                  className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
                 />
               </div>
               <div className="mb-4">
-                <label className="block mb-2 text-sm font-bold text-gray-700">
+                <label className="mb-2 block text-sm font-bold text-gray-700">
                   Image Logo URL:
                 </label>
                 <input
@@ -183,11 +180,11 @@ const HomePage = () => {
                   name="image_logo"
                   value={form.image_logo}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                  className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
                 />
               </div>
               <div className="mb-4">
-                <label className="block mb-2 text-sm font-bold text-gray-700">
+                <label className="mb-2 block text-sm font-bold text-gray-700">
                   Card details id:
                 </label>
                 <input
@@ -195,7 +192,7 @@ const HomePage = () => {
                   name="card_detail_id"
                   value={form.card_detail_id}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                  className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
                 />
               </div>
               <div className="mb-4">
@@ -207,7 +204,7 @@ const HomePage = () => {
                 </button>
                 {isCardDetailsTextOpen && (
                   <div className="mt-2">
-                    <label className="block mb-2 text-sm font-bold text-gray-700">
+                    <label className="mb-2 block text-sm font-bold text-gray-700">
                       Card Details Text:
                     </label>
                     <textarea
@@ -215,7 +212,7 @@ const HomePage = () => {
                       value={form.card_detail_text}
                       // @ts-ignore
                       onChange={handleChange}
-                      className="w-full h-32 px-3 py-2 text-gray-700 border rounded shadow appearance-none resize-y focus:outline-none focus:shadow-outline"
+                      className="focus:shadow-outline h-32 w-full resize-y appearance-none rounded border px-3 py-2 text-gray-700 shadow focus:outline-none"
                     ></textarea>
                   </div>
                 )}
@@ -229,53 +226,53 @@ const HomePage = () => {
 
               <button
                 type="submit"
-                className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+                className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
               >
                 Insert New Card
               </button>
             </form>
           </div>
 
-          <div className="w-full space-y-4 md:w-2/3 lg:w-full">
+          <div className="w-full min-w-fit space-y-4 md:w-2/3 lg:w-full">
             <h1 className="mb-4 text-4xl">Current Cards</h1>
             {cards.map((card, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between p-4 border rounded shadow-lg hover:bg-teal-800 hover:text-white hover:shadow-slate-950 hover:border-transparent"
+                className="flex items-center justify-between rounded border p-4 shadow-lg hover:border-transparent hover:bg-teal-800 hover:text-white hover:shadow-slate-950"
                 style={{ minWidth: '300px' }}
               >
                 <div className="flex items-center">
                   {card.image_logo === 'https://example.com/logo.png' ? (
-                    <div className="flex items-center justify-center w-16 h-16 mr-4 bg-gray-200">
+                    <div className="mr-4 flex h-16 w-16 items-center justify-center bg-gray-200">
                       <span className="text-gray-400">No Image</span>
                     </div>
                   ) : (
                     <img
                       src={card.image_logo}
                       alt={card.title}
-                      className="object-cover w-16 h-16 max-w-full max-h-full mr-4"
+                      className="mr-4 h-16 max-h-full w-16 max-w-full object-cover"
                     />
                   )}
                   <h2 className="flex-shrink-0 text-xl">{card.title}</h2>
                 </div>
-                <div className="flex button-container">
+                <div className="button-container flex">
                   <button
                     onClick={() => handleEdit(card.id)}
-                    className="px-2 mr-1 bg-transparent rounded text-slate-400 hover:bg-teal-600 hover:text-white"
+                    className="mr-1 rounded bg-transparent px-2 text-slate-400 hover:bg-teal-600 hover:text-white"
                   >
                     Edit
                   </button>
                   <div className="group">
                     <button
                       onClick={() => handleDelete(card.id)}
-                      className="px-2 py-1 text-white bg-transparent rounded group-hover:bg-red-400 group-hover:text-white"
+                      className="rounded bg-transparent px-2 py-1 text-white group-hover:bg-red-400 group-hover:text-white"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
-                        className="w-6 h-6 text-red-600 group-hover:fill-red-600 group-hover:text-white"
+                        className="h-6 w-6 text-red-600 group-hover:fill-red-600 group-hover:text-white"
                       >
                         <path
                           strokeLinecap="round"

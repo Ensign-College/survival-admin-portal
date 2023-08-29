@@ -32,12 +32,12 @@ const PictureInput: React.FC<PictureInputProps> = ({
                 alt={`Card detail ${index}`}
                 className="w-16 h-16 object-cover"
               />
-              <button
+              {/* <button
                 onClick={() => handleDeleteImage(pictureUrl)}
                 className="absolute top-0 right-0 px-2 py-1 text-white bg-red-600 rounded hover:bg-red-800"
               >
                 X
-              </button>
+              </button> */}
               {/* You can add delete button functionality here if needed */}
             </div>
           ))}
