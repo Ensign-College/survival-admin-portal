@@ -151,12 +151,12 @@ const HomePage = () => {
 
   return (
     <div className="h-screen min-h-screen bg-white p-8">
-      <h1 className="font-bolds pb-8 text-2xl">
+      <h1 className="pb-8 text-2xl font-bold">
         Welcome to Survival Admin Portal
       </h1>
       {isAuthenticated ? (
         <div className="flex flex-col p-2 pt-0 md:flex-row md:p-8">
-          <div className="w-full pr-8 md:w-1/3 lg:w-full">
+          <div className="w-full overflow-x-hidden pr-8 md:w-1/3 lg:w-full">
             <h1 className="mb-4 text-4xl">New Card</h1>
             <form onSubmit={handleSubmit} className="mb-8">
               <div className="mb-4">
