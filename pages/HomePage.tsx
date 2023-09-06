@@ -252,7 +252,7 @@ const HomePage = () => {
                       className="mr-4 h-16 max-h-full w-16 max-w-full object-cover"
                     />
                   )}
-                  <h2 className="flex-shrink-0 text-xl">{card.title}</h2>
+                  <h2 className="text-xl">{card.title}</h2>
                 </div>
                 <div className="button-container flex">
                   <button
