@@ -13,5 +13,5 @@ interface Card {
   image_logo: string
   card_detail_id: number
   card_detail_text: string
-  card_detail_pictures: string
+  card_detail_pictures: []
 }

@@ -1,46 +1,66 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 type PictureInputProps = {
-  pictures: string
+  pictures: string[]
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-  handleDeleteImage: (url: string) => void
 }
 
-const PictureInput: React.FC<PictureInputProps> = ({
-  pictures,
-  handleChange,
-  handleDeleteImage,
-}) => {
+const PictureInput: React.FC<PictureInputProps> = () => {
+  const [picturesState, setPicturesState] = useState<string[]>([])
+  const [newPictureUrl, setNewPictureUrl] = useState<string>('')
+
+  const handlePictureDelete = (index: number) => {
+    console.log('Delete button clicked')
+
+    const updatedPictures = picturesState.filter((_, i) => i !== index)
+    setPicturesState(updatedPictures)
+  }
+
+  const handleAddPicture = () => {
+    if (newPictureUrl.trim() !== '') {
+      setPicturesState([...picturesState, newPictureUrl])
+      setNewPictureUrl('')
+    }
+  }
+
   return (
     <div className="mb-4">
-      <label className="block mb-2 text-sm font-bold text-gray-700">
+      <label className="mb-2 block text-sm font-bold text-gray-700">
         Card Detail Pictures (comma-separated URLs):
       </label>
-      <input
-        type="text"
-        name="card_detail_pictures"
-        value={pictures}
-        onChange={handleChange}
-        className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-      />
-      <div className="flex space-x-2 mt-2 overflow-x-auto">
-        {pictures &&
-          pictures.split(',').map((pictureUrl, index) => (
-            <div key={index} className="flex-shrink-0">
-              <img
-                src={pictureUrl}
-                alt={`Card detail ${index}`}
-                className="w-16 h-16 object-cover"
-              />
-              {/* <button
-                onClick={() => handleDeleteImage(pictureUrl)}
-                className="absolute top-0 right-0 px-2 py-1 text-white bg-red-600 rounded hover:bg-red-800"
-              >
-                X
-              </button> */}
-              {/* You can add delete button functionality here if needed */}
-            </div>
-          ))}
+      <div className="flex">
+        <input
+          type="text"
+          name="card_detail_pictures"
+          value={newPictureUrl}
+          onChange={(e) => setNewPictureUrl(e.target.value)}
+          className="focus:shadow-outline mr-2 flex-grow rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+        />
+        <button
+          type="button"
+          onClick={handleAddPicture}
+          className="rounded bg-blue-500 px-2 py-1 text-white hover:bg-blue-700 focus:outline-none"
+        >
+          Add
+        </button>
+      </div>
+      <div className="mt-2 flex space-x-2 overflow-x-auto">
+        {picturesState.map((pictureUrl, index) => (
+          <div key={index} className="relative flex-shrink-0">
+            <img
+              src={pictureUrl}
+              alt={`Card detail ${index}`}
+              className="h-16 w-16 object-cover"
+            />
+            <button
+              type="button"
+              onClick={() => handlePictureDelete(index)}
+              className="absolute right-0 top-0 rounded bg-red-600 px-2 py-1 text-white hover:bg-red-800"
+            >
+              X
+            </button>
+          </div>
+        ))}
       </div>
     </div>
   )

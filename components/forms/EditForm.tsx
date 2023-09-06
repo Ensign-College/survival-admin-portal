@@ -1,5 +1,6 @@
 import React from 'react'
 import { TextAreaField, InputField } from '../inputs/InputComponents' // if these are in a separate file
+import PictureInput from '../inputs/PictureInput'
 
 interface EditFormProps {
   localCard: Card // Adjust this type as needed based on your Card type
@@ -7,13 +8,11 @@ interface EditFormProps {
   handleChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void
-  handleDeleteImage: (url: string) => void
 }
 const EditForm: React.FC<EditFormProps> = ({
   localCard,
   onSubmit,
   handleChange,
-  handleDeleteImage,
 }) => (
   <form onSubmit={onSubmit}>
     <InputField
@@ -41,37 +40,17 @@ const EditForm: React.FC<EditFormProps> = ({
       value={localCard.card_detail_text}
       onChange={handleChange}
     />
-    <label className="block mb-2 text-sm font-bold text-gray-700">
+    <label className="mb-2 block text-sm font-bold text-gray-700">
       Card Detail Pictures:
     </label>
-    <div className="flex space-x-2 mb-2">
-      {localCard.card_detail_pictures &&
-        localCard.card_detail_pictures.split(',').map((pictureUrl, index) => (
-          <div key={index} className="relative">
-            <img
-              src={pictureUrl}
-              alt={`Card detail ${index}`}
-              className="w-16 h-16 object-cover"
-            />
-            <button
-              onClick={() => handleDeleteImage(pictureUrl)}
-              className="absolute top-0 right-0 px-2 py-1 text-white bg-red-600 rounded hover:bg-red-800"
-            >
-              X
-            </button>
-          </div>
-        ))}
-    </div>
 
-    <InputField
-      label="Add More Images (comma separated URLs)"
-      name="card_detail_pictures"
-      value=""
-      onChange={handleChange}
+    <PictureInput
+      pictures={localCard.card_detail_pictures}
+      handleChange={handleChange}
     />
     <button
       type="submit"
-      className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+      className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
     >
       Submit Edited Card
     </button>

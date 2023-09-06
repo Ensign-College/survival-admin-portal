@@ -23,7 +23,7 @@ const HomePage = () => {
     image_logo: '',
     card_detail_id: 0,
     card_detail_text: '', // Initialize the card detail text field
-    card_detail_pictures: '', // Initialize the card detail pictures field
+    card_detail_pictures: [], // Initialize the card detail pictures field
   })
   const [isCardDetailsTextOpen, setIsCardDetailsTextOpen] = useState(false)
 
@@ -54,7 +54,7 @@ const HomePage = () => {
       image_logo: '',
       card_detail_id: 0,
       card_detail_text: '',
-      card_detail_pictures: '',
+      card_detail_pictures: [],
     })
   }
 
@@ -83,12 +83,10 @@ const HomePage = () => {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
-  const handlePictureDelete = (url: string) => {}
-
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    if (form.card_detail_text.trim() === '') {
+    if (isCardDetailsTextOpen === true && form.card_detail_text.trim() === '') {
       alert('Card detail text is required')
       return
     }
@@ -110,7 +108,7 @@ const HomePage = () => {
 
     const newCardDetails = {
       title: form.title,
-      pictures: form.card_detail_pictures.split(','),
+      pictures: form.card_detail_pictures,
       card_id: firstCard.id,
       text: form.card_detail_text,
     }
@@ -197,6 +195,7 @@ const HomePage = () => {
               </div>
               <div className="mb-4">
                 <button
+                  type="button"
                   onClick={toggleCardDetailsText}
                   className="text-blue-500 hover:underline"
                 >
@@ -221,11 +220,11 @@ const HomePage = () => {
               <PictureInput
                 pictures={form.card_detail_pictures}
                 handleChange={handleChange}
-                handleDeleteImage={handlePictureDelete}
               />
 
               <button
                 type="submit"
+                value="Submit"
                 className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
               >
                 Insert New Card
