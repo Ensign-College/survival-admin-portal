@@ -218,6 +218,7 @@ const HomePage = () => {
               </div>
 
               <PictureInput
+                currentCard={currentCard}
                 pictures={form.card_detail_pictures}
                 handleChange={handleChange}
               />

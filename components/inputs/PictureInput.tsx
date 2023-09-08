@@ -3,9 +3,10 @@ import React, { useState } from 'react'
 type PictureInputProps = {
   pictures: string[]
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  currentCard?: Card | null
 }
 
-const PictureInput: React.FC<PictureInputProps> = () => {
+const PictureInput: React.FC<PictureInputProps> = (currentCard) => {
   const [picturesState, setPicturesState] = useState<string[]>([])
   const [newPictureUrl, setNewPictureUrl] = useState<string>('')
 
@@ -44,6 +45,7 @@ const PictureInput: React.FC<PictureInputProps> = () => {
           Add
         </button>
       </div>
+
       <div className="mt-2 flex space-x-2 overflow-x-auto">
         {picturesState.map((pictureUrl, index) => (
           <div key={index} className="relative flex-shrink-0">

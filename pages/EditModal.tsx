@@ -38,7 +38,7 @@ const EditModal: React.FC<EditModalProps> = ({
       setLocalCard({
         ...card,
         card_detail_text: cardDetails.text,
-        card_detail_pictures: cardDetails.pictures.join(','),
+        card_detail_pictures: cardDetails.pictures,
       })
     }
   }, [card, cardDetails])
@@ -120,18 +120,18 @@ const EditModal: React.FC<EditModalProps> = ({
 
   return (
     <div className="modal-overlay">
-      <div className="bg-white w-full lg:w-2/3 m-8 p-8 rounded-xl">
-        <div className="flex flex-row-reverse justify-between mb-4">
+      <div className="m-8 w-full rounded-xl bg-white p-8 lg:w-2/3">
+        <div className="mb-4 flex flex-row-reverse justify-between">
           <button
             onClick={onClose}
-            className="modal-close-icon text-red-600 hover:bg-red-100 rounded"
+            className="modal-close-icon rounded text-red-600 hover:bg-red-100"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
-              className="w-6 h-6"
+              className="h-6 w-6"
             >
               <path
                 strokeLinecap="round"
@@ -148,7 +148,6 @@ const EditModal: React.FC<EditModalProps> = ({
             localCard={localCard}
             onSubmit={handleSubmit}
             handleChange={handleChange}
-            handleDeleteImage={handleDeleteImage}
           />
         )}
       </div>

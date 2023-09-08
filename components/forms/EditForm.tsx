@@ -44,6 +44,22 @@ const EditForm: React.FC<EditFormProps> = ({
       Card Detail Pictures:
     </label>
 
+    <div className="mt-2 flex space-x-2 overflow-x-auto">
+      {Array.isArray(localCard.card_detail_pictures) ? (
+        localCard.card_detail_pictures.map((pictureUrl, index) => (
+          <div key={index} className="relative flex-shrink-0">
+            <img
+              src={pictureUrl}
+              alt={`Card detail ${index}`}
+              className="h-16 w-16 object-cover"
+            />
+          </div>
+        ))
+      ) : (
+        <p>No pictures available.</p>
+      )}
+    </div>
+
     <PictureInput
       pictures={localCard.card_detail_pictures}
       handleChange={handleChange}
