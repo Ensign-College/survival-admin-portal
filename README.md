@@ -28,7 +28,7 @@ Then edit the .env file to include the correct values for the following:
 NEXT_PUBLIC_SUPABASE_URL=YOUR_SUPABASE_URL_HERE
 NEXT_PUBLIC_SUPABASE_API_KEY=YOUR_SUPABASE_API_KEY_HERE
 NEXT_PUBLIC_FIREBASE_API=KEY_OBTAINED_FROM_TOKEN.JS
-FIREBASE_TOKEN_PHONE=TOKEN_PERSONAL_PHONE_FROM_FIREBASE
+NEXT_PUBLIC_FIREBASE_TOKEN_PHONE=TOKEN_PERSONAL_PHONE_FROM_FIREBASE
 ```
 4. Get Supabase Credentials
 If you don't have the Supabase URL and API key, please write an email to one of the following to request the credentials:
