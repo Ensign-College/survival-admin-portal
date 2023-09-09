@@ -1,10 +1,15 @@
+
+//This doesn't work in the code. You have to use node.js, Use 'node api/token.js' on the terminal 
+// const getToken = require('./token');
+// const token = getToken();
+
+import { FIREBASE_API } from "../services/supabaseClients";
+
 export async function sendNotification(notificationData: any) {
-
-    const FirebaseKey = process.env.FIREBASE_API;
-    const FirebasePixelkey = process.env.FIREBASE_TOKEN_PIXEL;
-
+    
     try {
-      const accessToken = `Bearer ${FirebaseKey}`;
+      const accessToken = `Bearer ${FIREBASE_API}`;
+      
       const response = await fetch('https://fcm.googleapis.com/v1/projects/survivalguide-407e0/messages:send', {
         method: 'POST',
         headers: {
