@@ -1,0 +1,12 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Chrome Mobile Debugging",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://192.168.1.100:3000", // Replace with your application's URL
+      "webRoot": "${workspaceFolder}"
+    }
+  ]
+}

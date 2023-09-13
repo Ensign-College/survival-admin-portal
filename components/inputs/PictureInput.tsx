@@ -14,7 +14,7 @@ const PictureInput: React.FC<PictureInputProps> = ({
   handleDeleteImage,
   isEditOpen,
 }) => {
-  const [picturesState, setPicturesState] = useState<string[]>(pictures || [])
+  const [picturesState, setPicturesState] = useState<string[]>(pictures)
   const [newPictureUrl, setNewPictureUrl] = useState<string>('')
   const [load, setLoad] = useState(false)
   const handlePictureDelete = (index: number) => {
@@ -24,17 +24,13 @@ const PictureInput: React.FC<PictureInputProps> = ({
     setPicturesState(updatedPictures)
   }
 
-  useEffect(() => {
-    console.log('picturesState ' + picturesState)
-  }, [picturesState])
-
-  useEffect(() => {
-    console.log('newPictureUrl ' + newPictureUrl)
-  }, [newPictureUrl])
-
   if (isEditOpen === true && newPictureUrl) {
     // handleDeleteImage(newPictureUrl)
   }
+
+  useEffect(() => {
+    console.log('PicturesState ' + picturesState)
+  }, [picturesState])
 
   useEffect(() => {
     console.log(isEditOpen + ' is Edit open')

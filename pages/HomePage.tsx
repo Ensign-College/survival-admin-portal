@@ -23,9 +23,21 @@ const HomePage = () => {
     image_logo: '',
     card_detail_id: 0,
     card_detail_text: '', // Initialize the card detail text field
-    card_detail_pictures: [], // Initialize the card detail pictures field
+    card_detail_pictures: '', // Initialize the card detail pictures field
   })
   const [isCardDetailsTextOpen, setIsCardDetailsTextOpen] = useState(false)
+
+  const [pictureArray, setPictureArray] = useState<string[]>([])
+
+  useEffect(() => {
+    // Split the card_detail_pictures string into an array when it changes
+    const newPictureArray = form.card_detail_pictures
+      .split(',')
+      .map((value) => value.trim())
+
+    // Update the pictureArray state
+    setPictureArray(newPictureArray)
+  }, [form.card_detail_pictures])
 
   useEffect(() => {
     fetchCards()
@@ -54,7 +66,7 @@ const HomePage = () => {
       image_logo: '',
       card_detail_id: 0,
       card_detail_text: '',
-      card_detail_pictures: [],
+      card_detail_pictures: '',
     })
   }
 
@@ -134,6 +146,14 @@ const HomePage = () => {
     setCards([...cards, updatedCard])
     resetForm()
   }
+
+  useEffect(() => {
+    console.log('form.card_detail_pictures ' + form.card_detail_pictures)
+  }, [])
+
+  useEffect(() => {
+    console.log('pictureArray ' + pictureArray)
+  }, [])
 
   const handleCardUpdate = (updatedCard: Card) => {
     setCards((prevCards) =>
@@ -219,7 +239,7 @@ const HomePage = () => {
 
               <PictureInput
                 currentCard={currentCard}
-                pictures={form.card_detail_pictures}
+                pictures={pictureArray}
                 handleChange={handleChange}
                 isEditOpen={isEditModalOpen}
               />
