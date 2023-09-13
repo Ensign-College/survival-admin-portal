@@ -8,11 +8,13 @@ interface EditFormProps {
   handleChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void
+  handleDeleteImage?: (url: string) => void
 }
 const EditForm: React.FC<EditFormProps> = ({
   localCard,
   onSubmit,
   handleChange,
+  handleDeleteImage,
 }) => (
   <form onSubmit={onSubmit}>
     <InputField
@@ -44,7 +46,7 @@ const EditForm: React.FC<EditFormProps> = ({
       Card Detail Pictures:
     </label>
 
-    <div className="mt-2 flex space-x-2 overflow-x-auto">
+    {/* <div className="mt-2 flex space-x-2 overflow-x-auto">
       {Array.isArray(localCard.card_detail_pictures) ? (
         localCard.card_detail_pictures.map((pictureUrl, index) => (
           <div key={index} className="relative flex-shrink-0">
@@ -58,12 +60,14 @@ const EditForm: React.FC<EditFormProps> = ({
       ) : (
         <p>No pictures available.</p>
       )}
-    </div>
+    </div> */}
 
-    <PictureInput
-      pictures={localCard.card_detail_pictures}
-      handleChange={handleChange}
-    />
+    {localCard && (
+      <PictureInput
+        pictures={localCard.card_detail_pictures}
+        handleChange={handleChange}
+      />
+    )}
     <button
       type="submit"
       className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"

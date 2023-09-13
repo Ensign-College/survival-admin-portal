@@ -166,6 +166,7 @@ const EditModal: React.FC<EditModalProps> = ({
             localCard={localCard}
             onSubmit={handleSubmit}
             handleChange={handleChange}
+            handleDeleteImage={handleDeleteImage}
           />
         )}
       </div>

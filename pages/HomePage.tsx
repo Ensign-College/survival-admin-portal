@@ -221,6 +221,7 @@ const HomePage = () => {
                 currentCard={currentCard}
                 pictures={form.card_detail_pictures}
                 handleChange={handleChange}
+                isEditOpen={isEditModalOpen}
               />
 
               <button

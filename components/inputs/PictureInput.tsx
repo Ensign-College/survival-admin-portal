@@ -1,15 +1,22 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 type PictureInputProps = {
   pictures: string[]
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   currentCard?: Card | null
+  handleDeleteImage?: (url: string) => void
+  isEditOpen?: boolean
 }
 
-const PictureInput: React.FC<PictureInputProps> = (currentCard) => {
-  const [picturesState, setPicturesState] = useState<string[]>([])
+const PictureInput: React.FC<PictureInputProps> = ({
+  pictures,
+  currentCard,
+  handleDeleteImage,
+  isEditOpen,
+}) => {
+  const [picturesState, setPicturesState] = useState<string[]>(pictures || [])
   const [newPictureUrl, setNewPictureUrl] = useState<string>('')
-
+  const [load, setLoad] = useState(false)
   const handlePictureDelete = (index: number) => {
     console.log('Delete button clicked')
 
@@ -17,12 +24,33 @@ const PictureInput: React.FC<PictureInputProps> = (currentCard) => {
     setPicturesState(updatedPictures)
   }
 
+  useEffect(() => {
+    console.log('picturesState ' + picturesState)
+  }, [picturesState])
+
+  useEffect(() => {
+    console.log('newPictureUrl ' + newPictureUrl)
+  }, [newPictureUrl])
+
+  if (isEditOpen === true && newPictureUrl) {
+    // handleDeleteImage(newPictureUrl)
+  }
+
+  useEffect(() => {
+    console.log(isEditOpen + ' is Edit open')
+  }, [isEditOpen])
+
   const handleAddPicture = () => {
     if (newPictureUrl.trim() !== '') {
       setPicturesState([...picturesState, newPictureUrl])
       setNewPictureUrl('')
     }
   }
+  useEffect(() => {
+    if (currentCard) {
+      setLoad(true)
+    }
+  }, [currentCard])
 
   return (
     <div className="mb-4">
@@ -46,24 +74,48 @@ const PictureInput: React.FC<PictureInputProps> = (currentCard) => {
         </button>
       </div>
 
-      <div className="mt-2 flex space-x-2 overflow-x-auto">
-        {picturesState.map((pictureUrl, index) => (
-          <div key={index} className="relative flex-shrink-0">
-            <img
-              src={pictureUrl}
-              alt={`Card detail ${index}`}
-              className="h-16 w-16 object-cover"
-            />
-            <button
-              type="button"
-              onClick={() => handlePictureDelete(index)}
-              className="absolute right-0 top-0 rounded bg-red-600 px-2 py-1 text-white hover:bg-red-800"
-            >
-              X
-            </button>
-          </div>
-        ))}
-      </div>
+      {isEditOpen &&
+      currentCard?.card_detail_pictures &&
+      currentCard &&
+      currentCard.card_detail_pictures ? (
+        <div className="mt-2 flex space-x-2 overflow-x-auto">
+          {currentCard.card_detail_pictures.map((pictureUrl, index) => (
+            <div key={index} className="relative flex-shrink-0">
+              <img
+                src={pictureUrl}
+                alt={`Card detail ${index}`}
+                className="h-16 w-16 object-cover"
+              />
+              <button
+                type="button"
+                onClick={() => handlePictureDelete(index)}
+                className="absolute right-0 top-0 rounded bg-red-600 px-2 py-1 text-white hover:bg-red-800"
+              >
+                X
+              </button>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="mt-2 flex space-x-2 overflow-x-auto">
+          {picturesState.map((pictureUrl, index) => (
+            <div key={index} className="relative flex-shrink-0">
+              <img
+                src={pictureUrl}
+                alt={`Card detail ${index}`}
+                className="h-s16 w-16 object-cover"
+              />
+              <button
+                type="button"
+                onClick={() => handlePictureDelete(index)}
+                className="absolute right-0 top-0 rounded bg-red-600 px-2 py-1 text-white hover:bg-red-800"
+              >
+                X
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
