@@ -5,7 +5,7 @@
       "name": "Chrome Mobile Debugging",
       "type": "chrome",
       "request": "launch",
-      "url": "http://192.168.1.100:3000", // Replace with your application's URL
+      "url": "http://192.168.1.100:3000",
       "webRoot": "${workspaceFolder}"
     }
   ]
