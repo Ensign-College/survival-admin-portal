@@ -14,7 +14,7 @@ const PictureInput: React.FC<PictureInputProps> = ({
   handleDeleteImage,
   isEditOpen,
 }) => {
-  const [picturesState, setPicturesState] = useState<string[]>(pictures)
+  const [picturesState, setPicturesState] = useState<string[]>(pictures || [])
   const [newPictureUrl, setNewPictureUrl] = useState<string>('')
   const [load, setLoad] = useState(false)
   const handlePictureDelete = (index: number) => {
