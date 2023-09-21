@@ -62,7 +62,7 @@ const EditForm: React.FC<EditFormProps> = ({
       )}
     </div> */}
 
-    {localCard && (
+    {localCard !== null && Array.isArray(localCard.card_detail_pictures) && (
       <PictureInput
         pictures={localCard.card_detail_pictures}
         handleChange={handleChange}
