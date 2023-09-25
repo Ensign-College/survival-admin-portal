@@ -1,5 +1,4 @@
 import React from 'react';
-import EnsignLogo from "./ensign_logo.png";
 
 function LandingPage() {
     return ( 
@@ -7,9 +6,6 @@ function LandingPage() {
             {/*page header*/}
             <header className="bg-emerald-900 text-white py-8">
                 <div className="container mx-auto flex justify-between items-center">
-                    <div className="logo">
-                        <img src={EnsignLogo}/>
-                    </div>
                     <div>
                         <h1 className="text-4xl font-bold">Admin Portal</h1>
                         <p className="mt-2 text-lg">Manage all your admin tasks in a single place.</p>
