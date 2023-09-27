@@ -1,8 +1,8 @@
 import React from 'react';
-import HomePage from './HomePage';
+import LandingPage from './landing_page';
 
 const IndexPage: React.FC = () => {
-  return <HomePage />;
+  return <LandingPage />;
 };
 
 export default IndexPage;
