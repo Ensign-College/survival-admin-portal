@@ -1,9 +1,10 @@
 import {createClient} from '@supabase/supabase-js';
-import {useState, useEffect, ChangeEvent, FormEvent} from 'react';
+import {useState, useEffect, ChangeEvent, FormEvent, MouseEvent} from 'react';
 import EditModal from "./EditModal";
 import {SUPABASE_API_KEY, SUPABASE_URL} from "../services/supabaseClients";
 import AuthForm from './AuthForm';
 import PictureInput from "../components/inputs/PictureInput";
+import { Button } from '../components/Button';
 
 const supabase = createClient(SUPABASE_URL as string, SUPABASE_API_KEY as string);
 type Card = {
@@ -198,9 +199,12 @@ const HomePage = () => {
                         >
                             Insert New Card
                         </button>
+                        <Button text="Primary" color="primary">
+                                    Primary
+                                </Button> 
                     </form>
                 </div>
-            
+                              
                 <div className="w-full space-y-4 md:w-2/3 lg:w-full">
                     <h1 className="mb-4 text-4xl">Current Cards</h1>
                     {cards.map((card, index) => (
@@ -215,9 +219,19 @@ const HomePage = () => {
                                     <img src={card.image_logo} alt={card.title}
                                         className="object-cover w-16 h-16 max-w-full max-h-full mr-4"/>
                                 )}
+                                
                                 <h2 className="flex-shrink-0 text-xl">{card.title}</h2>
                             </div>
                             <div className="flex button-container">
+                                <Button text="Primary" color="primary">
+                                    Primary
+                                </Button> 
+                                <Button text="Edit" color="secondary">
+                                    Edit                                
+                                </Button>  
+                                <Button text="Delete" color="third">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6 text-red-600 group-hover:fill-red-600 group-hover:text-white"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                </Button>   
                                 <button onClick={() => handleEdit(card.id)}
                                         className="px-2 mr-1 bg-transparent rounded text-slate-400 hover:bg-teal-600 hover:text-white">
                                     Edit
