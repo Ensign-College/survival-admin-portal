@@ -130,7 +130,9 @@ const HomePage = () => {
     };
 
 
-    const toggleCardDetailsText = () => {
+    // @ts-ignore
+    const toggleCardDetailsText = (e) => {
+        e.preventDefault()
         setIsCardDetailsTextOpen(!isCardDetailsTextOpen);
     };
     
@@ -175,7 +177,7 @@ const HomePage = () => {
                             />
                         </div>
                         <div className="mb-4">
-                            <button onClick={toggleCardDetailsText} className="text-blue-500 hover:underline">
+                            <button onClick={(e)=> toggleCardDetailsText(e)} className="text-blue-500 hover:underline">
                                 {isCardDetailsTextOpen ? 'Collapse' : 'Add Card Details Text'}
                             </button>
                             {isCardDetailsTextOpen && (
