@@ -60,6 +60,7 @@ export type ButtonProps = {
   color?: "primary" | "secondary" | "third"; // three styling options
   disabled?: boolean; // make the button disabled or not
   text:string;
+  type?:string;
 };
 
 export const Button = ({

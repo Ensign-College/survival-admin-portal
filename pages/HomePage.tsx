@@ -193,18 +193,12 @@ const HomePage = () => {
                             )}
                         </div>
                         <PictureInput pictures={form.card_detail_pictures} handleChange={handleChange} />
-                        <button
-                            type="submit"
-                            className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
-                        >
+                       
+                        <Button text="Primary" color="primary"  type="submit">
                             Insert New Card
-                        </button>
-                        <Button text="Primary" color="primary">
-                                    Primary
-                                </Button> 
+                        </Button> 
                     </form>
-                </div>
-                              
+                </div>                      
                 <div className="w-full space-y-4 md:w-2/3 lg:w-full">
                     <h1 className="mb-4 text-4xl">Current Cards</h1>
                     {cards.map((card, index) => (
@@ -222,29 +216,14 @@ const HomePage = () => {
                                 
                                 <h2 className="flex-shrink-0 text-xl">{card.title}</h2>
                             </div>
-                            <div className="flex button-container">
-                                <Button text="Primary" color="primary">
-                                    Primary
-                                </Button> 
-                                <Button text="Edit" color="secondary">
+                            <div className="flex button-container"> 
+                                <Button text="Edit" color="secondary" onClick={() => handleEdit(card.id)}>
                                     Edit                                
-                                </Button>  
-                                <Button text="Delete" color="third">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6 text-red-600 group-hover:fill-red-600 group-hover:text-white"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                </Button>   
-                                <button onClick={() => handleEdit(card.id)}
-                                        className="px-2 mr-1 bg-transparent rounded text-slate-400 hover:bg-teal-600 hover:text-white">
-                                    Edit
-                                </button>
+                                </Button>                              
                                 <div className="group">
-                                    <button onClick={() => handleDelete(card.id)}
-                                        className="px-2 py-1 text-white bg-transparent rounded group-hover:bg-red-400 group-hover:text-white">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor" className="w-6 h-6 text-red-600 group-hover:fill-red-600 group-hover:text-white">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                        </svg>
-                                    </button>
+                                <Button text="Delete" color="third" onClick={() => handleDelete(card.id)}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6 text-red-600 group-hover:fill-red-600 group-hover:text-white"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                </Button>    
                                 </div>
                             </div>
                         </div>
