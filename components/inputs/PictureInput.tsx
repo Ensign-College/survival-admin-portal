@@ -11,26 +11,26 @@ type PictureInputProps = {
 const PictureInput: React.FC<PictureInputProps> = ({
   pictures,
   currentCard,
+  handleChange,
   handleDeleteImage,
   isEditOpen,
 }) => {
-  const [picturesState, setPicturesState] = useState<string[]>(pictures || [])
+  const [picturesState, setPicturesState] = useState<string[]>(pictures)
   const [newPictureUrl, setNewPictureUrl] = useState<string>('')
-  const [load, setLoad] = useState(false)
   const handlePictureDelete = (index: number) => {
     console.log('Delete button clicked')
 
     const updatedPictures = picturesState.filter((_, i) => i !== index)
     setPicturesState(updatedPictures)
   }
+  const handlePictureInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleChange(e) // Call the handleChange prop function
+    setNewPictureUrl(e.target.value) // Update the local state
+  }
 
   if (isEditOpen === true && newPictureUrl) {
     // handleDeleteImage(newPictureUrl)
   }
-
-  useEffect(() => {
-    console.log('PicturesState ' + picturesState)
-  }, [picturesState])
 
   useEffect(() => {
     console.log(isEditOpen + ' is Edit open')
@@ -42,11 +42,6 @@ const PictureInput: React.FC<PictureInputProps> = ({
       setNewPictureUrl('')
     }
   }
-  useEffect(() => {
-    if (currentCard) {
-      setLoad(true)
-    }
-  }, [currentCard])
 
   return (
     <div className="mb-4">
@@ -58,7 +53,7 @@ const PictureInput: React.FC<PictureInputProps> = ({
           type="text"
           name="card_detail_pictures"
           value={newPictureUrl}
-          onChange={(e) => setNewPictureUrl(e.target.value)}
+          onChange={handlePictureInputChange}
           className="focus:shadow-outline mr-2 flex-grow rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
         />
         <button

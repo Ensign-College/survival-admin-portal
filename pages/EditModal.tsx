@@ -63,10 +63,18 @@ const EditModal: React.FC<EditModalProps> = ({
         console.log('Card updated successfully')
       }
       let cardDetailPicturesArray: string[] = []
+      const [pictureArray, setPictureArray] = useState<string>('')
+      useEffect(() => {
+        // Split the card_detail_pictures string into an array when it changes
+        const newPictureArray = localCard.card_detail_pictures.join(',')
+
+        // Update the pictureArray state
+        setPictureArray(newPictureArray)
+      }, [localCard.card_detail_pictures])
 
       if (localCard.card_detail_pictures) {
         // Split the comma-separated string into an array
-        cardDetailPicturesArray = localCard.card_detail_pictures
+        cardDetailPicturesArray = pictureArray.split(',').map((s) => s.trim())
       }
 
       // Update card details in Supabase

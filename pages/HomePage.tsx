@@ -23,27 +23,28 @@ const HomePage = () => {
     image_logo: '',
     card_detail_id: 0,
     card_detail_text: '', // Initialize the card detail text field
-    card_detail_pictures: '', // Initialize the card detail pictures field
+    card_detail_pictures: [], // Initialize the card detail pictures field
   })
   const [isCardDetailsTextOpen, setIsCardDetailsTextOpen] = useState(false)
 
-  const [pictureArray, setPictureArray] = useState<string[]>([])
-
-  useEffect(() => {
-    // Split the card_detail_pictures string into an array when it changes
-    const newPictureArray = form.card_detail_pictures
-      .split(',')
-      .map((value) => value.trim())
-
-    // Update the pictureArray state
-    setPictureArray(newPictureArray)
-  }, [form.card_detail_pictures])
+  // useEffect(() => {
+  //   // Split the card_detail_pictures string into an array when it changes
+  //   console.log('card detail pics: ' + form.card_detail_pictures)
+  //   // Update the pictureArray state
+  //   form.card_detail_pictures.forEach((value, index) => {
+  //     console.log(`Value at index ${index}: ${value}`)
+  //   })
+  // }, [form.card_detail_pictures])
 
   useEffect(() => {
     fetchCards()
   }, [])
 
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
+
+  useEffect(() => {
+    console.log('pictures added: ' + JSON.stringify(form.card_detail_pictures))
+  }, [form.card_detail_pictures])
 
   const handleAuthenticated = () => {
     setIsAuthenticated(true)
@@ -66,7 +67,7 @@ const HomePage = () => {
       image_logo: '',
       card_detail_id: 0,
       card_detail_text: '',
-      card_detail_pictures: '',
+      card_detail_pictures: [],
     })
   }
 
@@ -111,12 +112,16 @@ const HomePage = () => {
     const firstCard = data ? data[0] : null
     const cardError = error
 
+    console.error('first card ' + JSON.stringify(firstCard))
+
     if (cardError || !firstCard) {
       // @ts-ignore
       alert('Error inserting new card:', cardError)
       console.error(cardError)
       return
     }
+
+    // Check if form.card_detail_pictures is an array before mapping it
 
     const newCardDetails = {
       title: form.title,
@@ -125,6 +130,10 @@ const HomePage = () => {
       text: form.card_detail_text,
     }
 
+    console.log('Form ' + JSON.stringify(form))
+    console.log('newCardDetails', JSON.stringify(newCardDetails, null, 2))
+    console.log('pictures: ', newCardDetails.pictures)
+
     await supabase.from('card_details').insert([newCardDetails])
 
     let firstCardDetail = await supabase
@@ -132,7 +141,10 @@ const HomePage = () => {
       .select()
       .eq('card_id', firstCard.id)
       .single()
+    console.error('first card ' + JSON.stringify(firstCard))
+    console.log('card details id: ' + JSON.stringify(firstCardDetail))
     console.log('card detail: ' + firstCardDetail.data.id)
+
     // Update card_detail_id in the card table
     // @ts-ignore
     let response = await supabase
@@ -146,14 +158,6 @@ const HomePage = () => {
     setCards([...cards, updatedCard])
     resetForm()
   }
-
-  useEffect(() => {
-    console.log('form.card_detail_pictures ' + form.card_detail_pictures)
-  }, [])
-
-  useEffect(() => {
-    console.log('pictureArray ' + pictureArray)
-  }, [])
 
   const handleCardUpdate = (updatedCard: Card) => {
     setCards((prevCards) =>
@@ -202,18 +206,6 @@ const HomePage = () => {
                 />
               </div>
               <div className="mb-4">
-                <label className="mb-2 block text-sm font-bold text-gray-700">
-                  Card details id:
-                </label>
-                <input
-                  type="number"
-                  name="card_detail_id"
-                  value={form.card_detail_id}
-                  onChange={handleChange}
-                  className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
-                />
-              </div>
-              <div className="mb-4">
                 <button
                   type="button"
                   onClick={toggleCardDetailsText}
@@ -239,7 +231,7 @@ const HomePage = () => {
 
               <PictureInput
                 currentCard={currentCard}
-                pictures={pictureArray}
+                pictures={form.card_detail_pictures}
                 handleChange={handleChange}
                 isEditOpen={isEditModalOpen}
               />
