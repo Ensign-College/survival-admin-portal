@@ -123,9 +123,11 @@ const HomePage = () => {
 
     // Check if form.card_detail_pictures is an array before mapping it
 
+    const picturesArray = [form.card_detail_pictures]
+
     const newCardDetails = {
       title: form.title,
-      pictures: form.card_detail_pictures,
+      pictures: picturesArray,
       card_id: firstCard.id,
       text: form.card_detail_text,
     }
