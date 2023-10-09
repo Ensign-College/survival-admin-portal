@@ -1,6 +1,27 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { setThemePreference, getThemePreference } from '../components/themes/theme';
 
 function LandingPage() {
+    const [userTheme, setUserTheme] = useState('');
+
+    useEffect(() => {
+        const themeFromLocalStorage = getThemePreference();
+        if (themeFromLocalStorage) {
+            setUserTheme(themeFromLocalStorage);
+            document.documentElement.classList.add(`theme-${themeFromLocalStorage}`);
+        }
+    }, []);
+
+    const toggleTheme = () => {
+        const newTheme = userTheme === 'light' ? 'dark' : 'light';
+
+        document.documentElement.classList.remove(`theme-${userTheme}`);
+        document.documentElement.classList.add(`theme-${newTheme}`);
+
+        setThemePreference(newTheme);
+        setUserTheme(newTheme);
+    };
+
     return ( 
         <div className="bg-gray-100 min-h-screen"> 
             {/*page header*/}
@@ -19,7 +40,9 @@ function LandingPage() {
                                 <a href="./EditModal">Edit</a>
                             </li>
                             <li>
-                                <a href="./index">Index</a>
+                                <button onClick={toggleTheme} className="text-white">
+                                    Toggle Theme
+                                </button>
                             </li>
                         </ul>
                     </nav>
@@ -27,7 +50,7 @@ function LandingPage() {
             </header>
 
             {/*page body*/}
-            <main className="container mx-auto py-16">
+            <main className={`bg-userTheme-primary min-h-screen`}>
                 <div className="text-center">
                     <h2 className="text-2xl font-semibold">Get Started</h2>
                     <p className="mt-4 text-gray-600">Sign in to access your admin dashboard.</p>
