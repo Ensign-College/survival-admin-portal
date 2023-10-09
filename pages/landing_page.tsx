@@ -15,7 +15,8 @@ function LandingPage() {
     const toggleTheme = () => {
         const newTheme = userTheme === 'light' ? 'dark' : 'light';
 
-        document.documentElement.classList.remove(`theme-${userTheme}`);
+        document.documentElement.classList.remove('theme-light')
+        document.documentElement.classList.remove('theme-dark');
         document.documentElement.classList.add(`theme-${newTheme}`);
 
         setThemePreference(newTheme);
@@ -23,9 +24,9 @@ function LandingPage() {
     };
 
     return ( 
-        <div className="bg-gray-100 min-h-screen"> 
+        <div className={`bg-${userTheme}-primary min-h-screen`}> 
             {/*page header*/}
-            <header className="bg-emerald-900 text-white py-8">
+            <header className="bg-emerald-900 `text-${userTheme}-primary`  py-8">
                 <div className="container mx-auto flex justify-between items-center">
                     <div>
                         <h1 className="text-4xl font-bold">Admin Portal</h1>
@@ -40,7 +41,7 @@ function LandingPage() {
                                 <a href="./EditModal">Edit</a>
                             </li>
                             <li>
-                                <button onClick={toggleTheme} className="text-white">
+                                <button onClick={toggleTheme} className={`text-${userTheme}-primary`}>
                                     Toggle Theme
                                 </button>
                             </li>
@@ -50,7 +51,7 @@ function LandingPage() {
             </header>
 
             {/*page body*/}
-            <main className={`bg-userTheme-primary min-h-screen`}>
+            <main className={`bg-${userTheme}-primary min-h-screen`}>
                 <div className="text-center">
                     <h2 className="text-2xl font-semibold">Get Started</h2>
                     <p className="mt-4 text-gray-600">Sign in to access your admin dashboard.</p>
