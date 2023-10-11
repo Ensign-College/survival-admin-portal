@@ -8,7 +8,7 @@ function LandingPage() {
         const themeFromLocalStorage = getThemePreference();
         if (themeFromLocalStorage) {
             setUserTheme(themeFromLocalStorage);
-            document.documentElement.classList.add(`theme-${themeFromLocalStorage}`);
+            document.documentElement.classList.add(`${themeFromLocalStorage}`);
         }
     }, []);
 
@@ -21,12 +21,19 @@ function LandingPage() {
 
         setThemePreference(newTheme);
         setUserTheme(newTheme);
+
+        console.log('userTheme:', userTheme);
+        console.log('Generated Class:', `container bg-${userTheme}-primary mx-auto py-16`);
+        
+        setTimeout(() => {
+            console.log('After update:', getThemePreference());
+        }, 100);
     };
 
     return ( 
-        <div className={`bg-${userTheme}-primary min-h-screen`}> 
+        <div className={`bg-${userTheme}-100 min-h-screen`}> 
             {/*page header*/}
-            <header className="bg-emerald-900 `text-${userTheme}-primary`  py-8">
+            <header className="bg-emerald-900 text-white py-8">
                 <div className="container mx-auto flex justify-between items-center">
                     <div>
                         <h1 className="text-4xl font-bold">Admin Portal</h1>
@@ -41,7 +48,7 @@ function LandingPage() {
                                 <a href="./EditModal">Edit</a>
                             </li>
                             <li>
-                                <button onClick={toggleTheme} className={`text-${userTheme}-primary`}>
+                                <button onClick={toggleTheme} className={`theme-${userTheme}`}>
                                     Toggle Theme
                                 </button>
                             </li>
@@ -51,7 +58,7 @@ function LandingPage() {
             </header>
 
             {/*page body*/}
-            <main className={`bg-${userTheme}-primary min-h-screen`}>
+            <main className={`bg-${userTheme}-primary container mx-auto py-16`}>
                 <div className="text-center">
                     <h2 className="text-2xl font-semibold">Get Started</h2>
                     <p className="mt-4 text-gray-600">Sign in to access your admin dashboard.</p>

@@ -14,10 +14,10 @@ module.exports = {
       },
       colors: {
         light: {
-          primary: '#ffffff'
+          primary: '#ffffff',
         },
         dark: {
-          primary: '#333333'
+          primary: '#333333',
         },
       },
     },
