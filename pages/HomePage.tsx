@@ -4,10 +4,9 @@ import EditModal from "./EditModal";
 import { SUPABASE_API_KEY, SUPABASE_URL, FIREBASE_TOKEN_PHONE } from "../services/supabaseClients";
 import AuthForm from './AuthForm';
 import PictureInput from "../components/inputs/PictureInput";
-import { sendNotification } from '../api/firebase';
+import { handleSendNotification } from '../services/notificationService';
 
 const supabase = createClient(SUPABASE_URL as string, SUPABASE_API_KEY as string);
-const TokenPhone = FIREBASE_TOKEN_PHONE as string;
 type Card = {
     id: number;
     title: string;
@@ -18,8 +17,6 @@ type Card = {
 
 const HomePage = () => {
 
-    /////////////////////////////////////////////////////////////////////////////////
-    ///
     const [isNotificationFormVisible, setIsNotificationFormVisible] = useState(false);
     const toggleNotificationForm = () => {
         setIsNotificationFormVisible(!isNotificationFormVisible);
@@ -38,30 +35,6 @@ const HomePage = () => {
             setNotificationImage(value);
         }
     };
-
-    const handleSendNotification = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const notificationData = {
-            "message":{
-                "token":TokenPhone,
-                "notification":{
-                  "body":notificationDescription,
-                  "title":notificationTitle,
-                  "image": notificationImage || null,
-                }
-             }
-          };
-        try {
-            await sendNotification(notificationData);
-        } catch (error) {
-            console.error('Error sending notification:', error);
-        }
-
-    };
-    ///
-    ////////////////////////
-
-    
 
     const [cards, setCards] = useState<Card[]>([]);
     const [form, setForm] = useState({
@@ -187,7 +160,7 @@ const HomePage = () => {
     <div className="min-h-screen p-8 bg-white">
         <h1 className="pb-8 text-2xl font-bold">Welcome to Survival Admin Portal</h1>
         {isAuthenticated ? (
-        <><div className="p-2 md:p-8 pt-0 flex flex-col md:flex-row">
+        <><div className="flex flex-col p-2 pt-0 md:p-8 md:flex-row">
 
                     <div className='w-full pr-8 md:w-1/3 lg:w-full'>
                         <h1 className="mb-4 text-4xl">New Card</h1>
@@ -288,14 +261,20 @@ const HomePage = () => {
                 </div><div className='w-full pr-8 md:w-1/3 lg:w-full'>
                         <button
                             onClick={toggleNotificationForm}
-                            className="mb-4 px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+                            className="px-4 py-2 mb-4 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
                         >
                             Notifications
                         </button>
 
                         {isNotificationFormVisible && (
-                            <form onSubmit={handleSendNotification} className="mb-8" autoComplete="off">
-                                <div className="mb-4">
+                            <form 
+  onSubmit={(e) => {
+    e.preventDefault(); 
+    handleSendNotification("all", notificationTitle, notificationDescription);
+  }} 
+  className="mb-8" 
+  autoComplete="off">
+                                    <div className="mb-4">
                                     <label className="block mb-2 text-sm font-bold text-gray-700">Title:</label>
                                     <input
                                         autoComplete="off"
