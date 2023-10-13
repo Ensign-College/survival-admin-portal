@@ -27,6 +27,8 @@ Then edit the .env file to include the correct values for the following:
 ```
 NEXT_PUBLIC_SUPABASE_URL=YOUR_SUPABASE_URL_HERE
 NEXT_PUBLIC_SUPABASE_API_KEY=YOUR_SUPABASE_API_KEY_HERE
+NEXT_PUBLIC_FIREBASE_API=KEY_OBTAINED_FROM_TOKEN.JS
+NEXT_PUBLIC_FIREBASE_TOKEN_PHONE=TOKEN_PERSONAL_PHONE_FROM_FIREBASE
 ```
 4. Get Supabase Credentials
 If you don't have the Supabase URL and API key, please write an email to one of the following to request the credentials:
@@ -35,7 +37,10 @@ If you don't have the Supabase URL and API key, please write an email to one of 
 - [csta02@ensign.net](mailto:csta02@ensign.net)
 - [csta03@ensign.net](mailto:csta03@ensign.net)
 - [itta02@ensign.net](mailto:itta02@ensign.net)
-5. Start the Development Server
+
+5. Download from firebase a Private Key (.json) and name it firebase.json, copy that in the api folder.
+
+6. Start the Development Server
 Run the following command to start the development server:
 
 ```
