@@ -4,7 +4,8 @@ import EditModal from "./EditModal";
 import {SUPABASE_API_KEY, SUPABASE_URL} from "../services/supabaseClients";
 import AuthForm from './AuthForm';
 import PictureInput from "../components/inputs/PictureInput";
-import { handleSendNotification } from '../services/notificationService';
+import { handleSendImageNotification, handleSendNotification } from '../services/notificationService';
+
 
 const supabase = createClient(SUPABASE_URL as string, SUPABASE_API_KEY as string);
 type Card = {
@@ -227,10 +228,16 @@ const HomePage = () => {
 
                         {isNotificationFormVisible && (
                             <form
-                                onSubmit={(e) => {
-                                    e.preventDefault();
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                if (notificationImage) {
+                                    // Call handleSendImageNotification if notificationImage has text
+                                    handleSendImageNotification("all", notificationTitle, notificationDescription, notificationImage);
+                                } else {
+                                    // Call handleSendNotification otherwise
                                     handleSendNotification("all", notificationTitle, notificationDescription);
-                                }}
+                                }
+                            }}
                                 className="mb-8"
                                 autoComplete="off">
                                 <div className="mb-4">
