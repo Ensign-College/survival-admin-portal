@@ -6,6 +6,7 @@ import AuthForm from './AuthForm';
 import PictureInput from "../components/inputs/PictureInput";
 import { handleSendImageNotification, handleSendNotification } from '../services/notificationService';
 
+
 const supabase = createClient(SUPABASE_URL as string, SUPABASE_API_KEY as string);
 type Card = {
     id: number;
