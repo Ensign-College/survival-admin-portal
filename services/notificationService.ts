@@ -67,7 +67,7 @@ export async function handleSendImageNotification(topic: string, title: string, 
             console.log("Image notification sent successfully with URL:", imageUrl);
         } else {
             // Handle error
-            console.log("Error sending the image notification");
+            console.log("Error sending the image notification", response.status);
         }
     } catch (error) {
         console.error("There was a problem sending the image notification", error);
