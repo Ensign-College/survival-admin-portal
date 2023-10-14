@@ -1,5 +1,3 @@
-import { Console } from "console";
-
 /**
  * Sends a notification to a specified topic.
  *
@@ -47,9 +45,7 @@ export async function handleSendNotification(topic: string, title: string, body:
  * @return {Promise<void>} A promise that resolves when the notification is sent successfully.
  */
 export async function handleSendImageNotification(topic: string, title: string, body: string, imageUrl: string) {
-
-    // const url = "https://survival-guide-notification-backend.onrender.com/sendTopicImageNotification";
-    const url = "http://localhost:3000/sendTopicImageNotification";
+    const url = "https://survival-guide-notification-backend.onrender.com/sendTopicImageNotification";
     console.log(imageUrl);
     const requestData = {
         topic,
@@ -68,8 +64,7 @@ export async function handleSendImageNotification(topic: string, title: string, 
         });
 
         if (response.status === 200) {
-            // Handle success
-            console.log("Image notification sent successfully with image url: ${imageUrl}");
+            console.log("Image notification sent successfully with URL:", imageUrl);
         } else {
             // Handle error
             console.log("Error sending the image notification");
