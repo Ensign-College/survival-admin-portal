@@ -71,6 +71,21 @@ const HomePage = () => {
     })
   }
 
+  // let picturesArray = [form.card_detail_pictures]
+  const [picturesArray, setPicturesArray] = useState([] as string[])
+
+  useEffect(() => {
+    const characters = form.card_detail_pictures
+    let newItem = ''
+
+    for (let i = 0; i < characters.length; i++) {
+      newItem += characters[i]
+    }
+
+    const updatedArray = [...picturesArray, newItem]
+    setPicturesArray(updatedArray)
+  }, [form.card_detail_pictures])
+
   const handleDelete = async (id: number) => {
     const { error } = await supabase.from('card').delete().match({ id })
     if (error) {
@@ -122,8 +137,6 @@ const HomePage = () => {
     }
 
     // Check if form.card_detail_pictures is an array before mapping it
-
-    const picturesArray = [form.card_detail_pictures]
 
     const newCardDetails = {
       title: form.title,

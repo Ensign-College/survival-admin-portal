@@ -29,13 +29,15 @@ const EditForm: React.FC<EditFormProps> = ({
       value={localCard.image_logo}
       onChange={handleChange}
     />
-    <InputField
-      label="Card details id"
-      name="card_detail_id"
-      value={localCard.card_detail_id.toString()}
-      onChange={handleChange}
-      type="number"
-    />
+    {localCard && localCard.card_detail_id && (
+      <InputField
+        label="Card details id"
+        name="card_detail_id"
+        value={localCard.card_detail_id.toString()}
+        onChange={handleChange}
+        type="number"
+      />
+    )}
     <TextAreaField
       label="Card Details Text"
       name="card_detail_text"

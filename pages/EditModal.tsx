@@ -42,7 +42,7 @@ const EditModal: React.FC<EditModalProps> = ({
       })
     }
   }, [card, cardDetails])
-
+  const [pictureArray, setPictureArray] = useState<string>('')
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (localCard) {
@@ -63,7 +63,7 @@ const EditModal: React.FC<EditModalProps> = ({
         console.log('Card updated successfully')
       }
       let cardDetailPicturesArray: string[] = []
-      const [pictureArray, setPictureArray] = useState<string>('')
+
       useEffect(() => {
         // Split the card_detail_pictures string into an array when it changes
         const newPictureArray = localCard.card_detail_pictures.join(',')
