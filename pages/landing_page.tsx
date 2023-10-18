@@ -13,16 +13,6 @@ function LandingPage() {
         }
     }, []);
 
-    const handleToggle = () => {
-        const newTheme = userTheme === 'light' ? 'dark' : 'light';
-        setThemePreference(newTheme);
-        setUserTheme(newTheme);
-
-        // Assuming you have a class for each theme in your CSS
-        document.documentElement.classList.toggle('light', newTheme === 'light');
-        document.documentElement.classList.toggle('dark', newTheme === 'dark');
-    };
-
     const toggleTheme = () => {
         const newTheme = userTheme === 'light' ? 'dark' : 'light';
 
@@ -33,18 +23,12 @@ function LandingPage() {
         setThemePreference(newTheme);
         setUserTheme(newTheme);
 
-        console.log('userTheme:', userTheme);
-        console.log('Generated Class:', `container bg-${userTheme}-primary mx-auto py-16`);
-        
-        setTimeout(() => {
-            console.log('After update:', getThemePreference());
-        }, 100);
     };
 
     return ( 
         <div className={`bg-${userTheme}-100 min-h-screen`}> 
             {/*page header*/}
-            <header className="bg-emerald-900 text-white py-8">
+            <header className="bg-emerald-900 text-stone-200 py-8">
                 <div className="container mx-auto flex justify-between items-center">
                     <div>
                         <h1 className="text-4xl font-bold">Admin Portal</h1>
@@ -59,7 +43,7 @@ function LandingPage() {
                                 <a href="./EditModal">Edit</a>
                             </li>
                             <li>
-                                <ToggleButton value={false} onChange={toggleTheme}/>
+                                <ToggleButton onChange={toggleTheme}/>
                             </li>
                         </ul>
                     </nav>

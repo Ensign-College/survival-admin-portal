@@ -1,33 +1,36 @@
-import React, { useEffect, useState } from 'react';
-import { setThemePreference, getThemePreference } from '../themes/theme';
+import React, { useState } from 'react';
 
 interface ToggleProps {
-    value: boolean;
-    onChange: () => void;
+    onChange: (value: boolean) => void;
 }
 
 const ToggleButton = (props: ToggleProps) => {
+    const [value, setValue] = useState(false);
 
-    const toggleClass="transform translate-x-6";
+    const handleClick = () => {
+        const newValue = !value;
+        setValue(newValue);
+        props.onChange(newValue);
+    };
+
+    const toggleClass = "transform translate-x-6";
 
     return (
         <div
-        onClick={props.onChange}
-        className={`md: w-14 md:h-7 w-12 h-6 flex items-center ${props.value === true ? "bg-blue-200" : "bg-gray-300"}
-        rounded-full p-1 cursor-pointer`}
+            onClick={handleClick}
+            className={`md:h-7 w-14 h-6 flex items-center ${
+                value ? "bg-zinc-600" : "bg-stone-300"
+            } rounded-full p-1 cursor-pointer`}
         >
-        {/* Switch options */}    
-        <div
-        className={`
-        ${props.value === true ? "bg-blue-600" : "bg-white"}
-        md:w-6 md:h-6 h-5 w-5 rounded-full shadow-md transition transform ${
-            props.value ? toggleClass : null
-        }
-        `}
-        ></div>
+            {/* Switch options */}
+            <div
+                className={`${value ? "bg-slate-800" : "bg-zinc-50"}
+                    md:w-6 md:h-6 h-5 w-5 rounded-full shadow-md transition transform ${
+                    value ? toggleClass : null
+                }`}
+            ></div>
         </div>
-    )
-}
-
+    );
+};
 
 export default ToggleButton;

@@ -10,14 +10,14 @@
 
 .theme-light {
   --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 240, 240, 240;
-  --background-end-rgb: 255, 255, 255;
+  --background-start-rgb: 180, 184, 171;
+  --background-end-rgb: 240, 240, 240;
 }
 
-.theme-dark {
-  --foreground-rgb: 255, 255, 255;       
-  --background-start-rgb: 70, 70, 70;   
-  --background-end-rgb: 0, 0, 0;          
+.theme-dark { 
+  --foreground-rgb: 244, 249, 233;       
+  --background-start-rgb: 55, 55, 55;   
+  --background-end-rgb: 10, 10, 10;          
 }
 
 body {
