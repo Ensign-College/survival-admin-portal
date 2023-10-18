@@ -38,3 +38,9 @@ next-env.d.ts
 .idea/vcs.xml
 .idea/workspace.xml
 package-lock.json
+
+#firebase
+firebase.json
+
+.env
+package-lock.json
