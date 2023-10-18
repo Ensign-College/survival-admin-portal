@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { setThemePreference, getThemePreference } from '../components/themes/theme';
+import ToggleButton from '../components/themes/toggle_button';
 
 function LandingPage() {
     const [userTheme, setUserTheme] = useState('');
@@ -11,6 +12,16 @@ function LandingPage() {
             document.documentElement.classList.add(`${themeFromLocalStorage}`);
         }
     }, []);
+
+    const handleToggle = () => {
+        const newTheme = userTheme === 'light' ? 'dark' : 'light';
+        setThemePreference(newTheme);
+        setUserTheme(newTheme);
+
+        // Assuming you have a class for each theme in your CSS
+        document.documentElement.classList.toggle('light', newTheme === 'light');
+        document.documentElement.classList.toggle('dark', newTheme === 'dark');
+    };
 
     const toggleTheme = () => {
         const newTheme = userTheme === 'light' ? 'dark' : 'light';
@@ -48,9 +59,7 @@ function LandingPage() {
                                 <a href="./EditModal">Edit</a>
                             </li>
                             <li>
-                                <button onClick={toggleTheme} className={`theme-${userTheme}`}>
-                                    Toggle Theme
-                                </button>
+                                <ToggleButton value={false} onChange={toggleTheme}/>
                             </li>
                         </ul>
                     </nav>
