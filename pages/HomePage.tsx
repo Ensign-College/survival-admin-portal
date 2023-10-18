@@ -1,11 +1,12 @@
 import {createClient} from '@supabase/supabase-js';
-import {useState, useEffect, ChangeEvent, FormEvent} from 'react';
+import React, {useState, useEffect, ChangeEvent, FormEvent, useMemo} from 'react';
 import EditModal from "./EditModal";
 import {SUPABASE_API_KEY, SUPABASE_URL} from "../services/supabaseClients";
 import AuthForm from './AuthForm';
 import PictureInput from "../components/inputs/PictureInput";
 import { handleSendImageNotification, handleSendNotification } from '../services/notificationService';
-
+import "react-quill/dist/quill.snow.css";
+import dynamic from "next/dynamic";
 
 const supabase = createClient(SUPABASE_URL as string, SUPABASE_API_KEY as string);
 type Card = {
@@ -29,6 +30,7 @@ const HomePage = () => {
     });
     const [isCardDetailsTextOpen, setIsCardDetailsTextOpen] = useState(false);
 
+    const ReactQuill = useMemo(() => dynamic(() => import('react-quill'), { ssr: false }),[]);
     useEffect(() => {
         fetchCards();
     }, []);
@@ -54,6 +56,9 @@ const HomePage = () => {
     const handleAuthenticated = () => {
       setIsAuthenticated(true);
     };
+    const TOOLBAR_OPTIONS = [
+        ["bold", "italic", "underline", "strike", "blockquote", "link"],
+    ];
 
     const fetchCards = async () => {
         const {data, error} = await supabase.from('card').select();
@@ -84,6 +89,14 @@ const HomePage = () => {
             // @ts-ignore
             setCards(cards.filter(card => card.id !== id));
         }
+    };
+
+    // @ts-ignore
+    const handleQuillChange = (value) => {
+        setForm({
+            ...form,
+            title: value  // Update card_detail_text when Quill content changes
+        });
     };
 
     const handleEdit = (id: number) => {
@@ -155,7 +168,9 @@ const HomePage = () => {
         e.preventDefault()
         setIsCardDetailsTextOpen(!isCardDetailsTextOpen);
     };
-    
+    const [markdownInput, setMarkdownInput] = React.useState("");
+
+
 
     return (
         <div className="min-h-screen p-8 bg-white">
@@ -167,13 +182,22 @@ const HomePage = () => {
                     <form onSubmit={handleSubmit} className="mb-8">
                         <div className="mb-4">
                             <label className="block mb-2 text-sm font-bold text-gray-700">Title:</label>
-                            <input
-                                type="text"
-                                name="title"
-                                value={form.title}
-                                onChange={handleChange}
-                                className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                            <ReactQuill theme="snow"
+                                        value={form.title}
+                                        onChange={handleQuillChange}
+                                        modules={{
+                                            toolbar: {
+                                                container: TOOLBAR_OPTIONS
+                                            }
+                                        }}
                             />
+                            {/*<input*/}
+                            {/*    type="text"*/}
+                            {/*    name="title"*/}
+                            {/*    value={form.title}*/}
+                            {/*    onChange={handleChange}*/}
+                            {/*    className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"*/}
+                            {/*/>*/}
                         </div>
                         <div className="mb-4">
                             <label className="block mb-2 text-sm font-bold text-gray-700">Image Logo URL:</label>

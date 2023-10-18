@@ -16,7 +16,7 @@ interface TextAreaFieldProps {
 
  const InputField: React.FC<InputFieldProps> = ({ label, name, value, onChange, type = "text" }) => (
     <div className="mb-4">
-        <label className="block mb-2 text-sm font-bold text-gray-700">{label}:</label>
+        <label className="block mb-2 text-sm font-bold text-gray-700">{label}: </label>
         <input
             type={type}
             name={name}
