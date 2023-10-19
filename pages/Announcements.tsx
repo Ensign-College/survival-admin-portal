@@ -16,7 +16,12 @@ const Announcements: React.FC = () => {
       // Call the notification function with the input values
       if (imageUrl) {
         // If imageUrl is not empty, call the handleSendImageNotification function
-        await handleSendImageNotification(topic, title, body, imageUrl);
+        await handleSendImageNotification(
+          topic || "all",
+          title,
+          body,
+          imageUrl
+        );
       } else {
         // If imageUrl is empty, call the handleSendNotification function
         await handleSendNotification(topic || "all", title, body);
@@ -73,18 +78,11 @@ const Announcements: React.FC = () => {
           className="bg-white shadow-md rounded px-8 pt-3 pb-20 mt-3 mb-4"
           type="text"
           id="imageUrl"
-          name="imageUrl"
+          name="notificationImage"
           placeholder="Image URL"
+          autoComplete="off"
           value={imageUrl}
           onChange={(e) => setImageUrl(e.target.value)}
-        />
-        <PictureInput
-          pictures={""}
-          handleChange={function (
-            e: React.ChangeEvent<HTMLInputElement>
-          ): void {
-            throw new Error("Function not implemented.");
-          }}
         />
         <button
           type="button" // Use type="button" to prevent form submission
