@@ -4,6 +4,8 @@ import EditModal from "./EditModal";
 import {SUPABASE_API_KEY, SUPABASE_URL} from "../services/supabaseClients";
 import AuthForm from './AuthForm';
 import PictureInput from "../components/inputs/PictureInput";
+import { handleSendImageNotification, handleSendNotification } from '../services/notificationService';
+
 
 const supabase = createClient(SUPABASE_URL as string, SUPABASE_API_KEY as string);
 type Card = {
@@ -12,6 +14,8 @@ type Card = {
     image_logo: string;
     card_detail_id: number;
 };
+
+
 
 
 const HomePage = () => {
@@ -28,7 +32,23 @@ const HomePage = () => {
     useEffect(() => {
         fetchCards();
     }, []);
-
+    const [isNotificationFormVisible, setIsNotificationFormVisible] = useState(false);
+    const toggleNotificationForm = () => {
+        setIsNotificationFormVisible(!isNotificationFormVisible);
+    };
+    const [notificationTitle, setNotificationTitle] = useState('');
+    const [notificationDescription, setNotificationDescription] = useState('');
+    const [notificationImage, setNotificationImage] = useState('');
+    const handleNotificationChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        if (name === 'notificationTitle') {
+            setNotificationTitle(value);
+        } else if (name === 'notificationDescription') {
+            setNotificationDescription(value);
+        } else if (name === 'notificationImage') {
+            setNotificationImage(value);
+        }
+    };
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
     const handleAuthenticated = () => {
@@ -136,11 +156,10 @@ const HomePage = () => {
     
 
     return (
-    <div className="min-h-screen p-8 bg-white">
-        <h1 className="pb-8 text-2xl font-bold">Welcome to Survival Admin Portal</h1>
-        {isAuthenticated ? (
-        <div className="p-2 md:p-8 pt-0 flex flex-col md:flex-row">
-                
+        <div className="min-h-screen p-8 bg-white">
+            <h1 className="pb-8 text-2xl font-bold">Welcome to Survival Admin Portal</h1>
+            {isAuthenticated ? (
+                <div className="flex flex-col p-2 pt-0 md:p-8 md:flex-row">
                 <div className='w-full pr-8 md:w-1/3 lg:w-full'>
                     <h1 className="mb-4 text-4xl">New Card</h1>
                     <form onSubmit={handleSubmit} className="mb-8">
@@ -199,8 +218,69 @@ const HomePage = () => {
                             Insert New Card
                         </button>
                     </form>
+                    <div className='w-full pr-8 md:w-1/3 lg:w-full'>
+                        <button
+                            onClick={toggleNotificationForm}
+                            className="px-4 py-2 mb-4 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+                        >
+                            Notifications
+                        </button>
+
+                        {isNotificationFormVisible && (
+                            <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                if (notificationImage) {
+                                    // Call handleSendImageNotification if notificationImage has text
+                                    handleSendImageNotification("all", notificationTitle, notificationDescription, notificationImage);
+                                } else {
+                                    // Call handleSendNotification otherwise
+                                    handleSendNotification("all", notificationTitle, notificationDescription);
+                                }
+                            }}
+                                className="mb-8"
+                                autoComplete="off">
+                                <div className="mb-4">
+                                    <label className="block mb-2 text-sm font-bold text-gray-700">Title:</label>
+                                    <input
+                                        autoComplete="off"
+                                        type="text"
+                                        name="notificationTitle"
+                                        value={notificationTitle}
+                                        onChange={handleNotificationChange}
+                                        className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline" />
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block mb-2 text-sm font-bold text-gray-700">Description:</label>
+                                    <textarea
+                                        autoComplete="off"
+                                        name="notificationDescription"
+                                        value={notificationDescription}
+                                        onChange={handleNotificationChange}
+                                        className="w-full h-32 px-3 py-2 text-gray-700 border rounded shadow appearance-none resize-y focus:outline-none focus:shadow-outline"
+                                    ></textarea>
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block mb-2 text-sm font-bold text-gray-700">Image URL:</label>
+                                    <input
+                                        autoComplete="off"
+                                        type="text"
+                                        name="notificationImage"
+                                        value={notificationImage}
+                                        onChange={handleNotificationChange}
+                                        className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline" />
+                                </div>
+                                <button
+                                    type="submit"
+                                    className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+                                >
+                                    Send Notification
+                                </button>
+                            </form>
+                        )}
+                    </div>
                 </div>
-            
+
                 <div className="w-full space-y-4 md:w-2/3 lg:w-full">
                     <h1 className="mb-4 text-4xl">Current Cards</h1>
                     {cards.map((card, index) => (
@@ -233,13 +313,14 @@ const HomePage = () => {
                                     </button>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+
+                    </div>))}
+
+                    {isEditModalOpen && (
+                        <EditModal card={currentCard} supabase={supabase} onClose={() => setIsEditModalOpen(false)} onUpdate={handleCardUpdate} onSubmit={handleEdit} />
+                    )}
                 </div>
-                {isEditModalOpen && (
-                    <EditModal card={currentCard} supabase={supabase} onClose={() => setIsEditModalOpen(false)} onUpdate={handleCardUpdate} onSubmit={handleEdit}/>
-                )}
-        </div>
+                </div>
         ) : (
         <AuthForm onAuthenticated={handleAuthenticated} />
         )}
