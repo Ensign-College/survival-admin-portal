@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React from "react";
 
 interface LoginPageProps {
@@ -8,17 +9,13 @@ interface LoginPageProps {
 const Login: React.FC<LoginPageProps> = (props) => {
   return (
     <div className="h-screen flex">
-      {" "}
-      {/* Make the whole content full-screen height and use flex to separate logo and form */}
       <div className="w-1/2 bg-white flex flex-col justify-center">
-        {" "}
-        {/* Logo takes the whole left side with a white background */}
-        <div className="text-center">
+        <div className="text-center p-2">
           <img
-            src="lib/assets/logo.png"
-            className=" w-16 h-16 max-w-full max-h-full mr-4"
-          />{" "}
-          {/* Adjust the width and height as needed */}
+            src="/assets/logo.png"
+            className="max-w-full max-h-full mr-4"
+            alt="Logo"
+          />
         </div>
       </div>
       <form
