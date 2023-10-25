@@ -6,7 +6,7 @@ import {describe} from "@jest/globals";
 
 const { getByRole } = render(
     <ReactQuill theme="snow"
-                value={""}
+                value={"test"}
                 onChange={() => {}}
                 modules={{
                     toolbar: {
@@ -20,7 +20,8 @@ const { getByRole } = render(
 
 describe("This is a test",()=>{
     const editor = getByRole('textbox');
-    expect(editor).not();
+    console.log(editor)
+    expect(editor)
     const videoData = {
         "videos": [
             {

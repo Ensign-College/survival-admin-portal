@@ -56,9 +56,6 @@ const HomePage = () => {
     const handleAuthenticated = () => {
       setIsAuthenticated(true);
     };
-    const TOOLBAR_OPTIONS = [
-        ["bold", "italic", "underline", "strike", "blockquote", "link"],
-    ];
 
     const fetchCards = async () => {
         const {data, error} = await supabase.from('card').select();
@@ -91,11 +88,26 @@ const HomePage = () => {
         }
     };
 
+    const TOOLBAR_OPTIONS = [
+        ["bold", "italic", "underline", "strike", "blockquote", "link"],
+    ];
+    const extractText = (html: string) => {
+        return html.replace(/<[^>]*>?/gm, '');
+    };
+
+
     // @ts-ignore
-    const handleQuillChange = (value) => {
+    const handleQuillChangeTitle = (value) => {
         setForm({
             ...form,
-            title: value  // Update card_detail_text when Quill content changes
+            title: extractText(value),
+        });
+    };
+    // @ts-ignore
+    const handleQuillChangeCardDetail = (value) => {
+        setForm({
+            ...form,
+            card_detail_text: value,
         });
     };
 
@@ -184,7 +196,7 @@ const HomePage = () => {
                             <label className="block mb-2 text-sm font-bold text-gray-700">Title:</label>
                             <ReactQuill theme="snow"
                                         value={form.title}
-                                        onChange={handleQuillChange}
+                                        onChange={handleQuillChangeTitle}
                                         modules={{
                                             toolbar: {
                                                 container: TOOLBAR_OPTIONS
@@ -226,13 +238,22 @@ const HomePage = () => {
                             {isCardDetailsTextOpen && (
                                 <div className="mt-2">
                                     <label className="block mb-2 text-sm font-bold text-gray-700">Card Details Text:</label>
-                                    <textarea
-                                        name="card_detail_text"
-                                        value={form.card_detail_text}
-                                        // @ts-ignore
-                                        onChange={handleChange}
-                                        className="w-full h-32 px-3 py-2 text-gray-700 border rounded shadow appearance-none resize-y focus:outline-none focus:shadow-outline"
-                                    ></textarea>
+                                    {/*<textarea*/}
+                                    {/*    name="card_detail_text"*/}
+                                    {/*    value={form.card_detail_text}*/}
+                                    {/*    // @ts-ignore*/}
+                                    {/*    onChange={handleChange}*/}
+                                    {/*    className="w-full h-32 px-3 py-2 text-gray-700 border rounded shadow appearance-none resize-y focus:outline-none focus:shadow-outline"*/}
+                                    {/*></textarea>*/}
+                                    <ReactQuill theme="snow"
+                                                value={form.card_detail_text}
+                                                onChange={handleQuillChangeCardDetail}
+                                                modules={{
+                                                    toolbar: {
+                                                        container: TOOLBAR_OPTIONS
+                                                    }
+                                                }}
+                                    />
                                 </div>
                             )}
                         </div>
@@ -321,7 +342,8 @@ const HomePage = () => {
                                     <img src={card.image_logo} alt={card.title}
                                         className="object-cover w-16 h-16 max-w-full max-h-full mr-4"/>
                                 )}
-                                <h2 className="flex-shrink-0 text-xl">{card.title}</h2>
+                                {/*<h2 className="flex-shrink-0 text-xl">{card.title}</h2>*/}
+                                <p dangerouslySetInnerHTML={{__html: card.title}}/>
                             </div>
                             <div className="flex button-container">
                                 <button onClick={() => handleEdit(card.id)}

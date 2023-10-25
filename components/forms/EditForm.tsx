@@ -12,7 +12,7 @@ const EditForm: React.FC<EditFormProps> = ({ localCard, onSubmit, handleChange, 
         <InputField label="Title" name="title" value={localCard.title} onChange={handleChange} />
         <InputField label="Image Logo URL" name="image_logo" value={localCard.image_logo} onChange={handleChange} />
         <InputField label="Card details id" name="card_detail_id" value={localCard.card_detail_id.toString()} onChange={handleChange} type="number" />
-        <TextAreaField label="Card Details Text" name="card_detail_text" value={localCard.card_detail_text} onChange={handleChange} />
+        <TextAreaField label="Card Details Text " name="card_detail_text" value={localCard.card_detail_text} onChange={handleChange} />
         <label className="block mb-2 text-sm font-bold text-gray-700">Card Detail Pictures:</label>
         <div className="flex space-x-2 mb-2">
             {localCard.card_detail_pictures && localCard.card_detail_pictures.split(',').map((pictureUrl, index) => (
