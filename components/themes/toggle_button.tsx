@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { getThemePreference, setThemePreference } from './theme';
 
 interface ToggleProps {
     onChange: (value: boolean) => void;
@@ -7,10 +8,16 @@ interface ToggleProps {
 const ToggleButton = (props: ToggleProps) => {
     const [value, setValue] = useState(false);
 
+    useEffect(() => {
+        const themeFromLocalStorage = getThemePreference();
+        setValue(themeFromLocalStorage === 'dark');
+    }, []);
+
     const handleClick = () => {
         const newValue = !value;
         setValue(newValue);
         props.onChange(newValue);
+        setThemePreference(newValue ? 'dark' : 'light');
     };
 
     const toggleClass = "transform translate-x-6";

@@ -1,34 +1,47 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { setThemePreference, getThemePreference } from '../components/themes/theme';
 import ToggleButton from '../components/themes/toggle_button';
 
 function LandingPage() {
     const [userTheme, setUserTheme] = useState('');
 
-    useEffect(() => {
-        const themeFromLocalStorage = getThemePreference();
-        if (themeFromLocalStorage) {
-            setUserTheme(themeFromLocalStorage);
-            document.documentElement.classList.add(`${themeFromLocalStorage}`);
-        }
+    const applyTheme = useCallback((theme: any) => {
+        document.documentElement.classList.remove('theme-light', 'theme-dark');
+        document.documentElement.classList.add(`theme-${theme}`);
     }, []);
 
-    const toggleTheme = () => {
+    useEffect(() => {
+        const themeFromLocalStorage = getThemePreference();
+        const defaultTheme = 'light'; // Set your default theme here
+
+        // Use the theme from local storage if available, or set the default theme
+        const initialTheme = themeFromLocalStorage || defaultTheme;
+
+        setUserTheme(initialTheme);
+        applyTheme(initialTheme);
+    }, [applyTheme]);
+
+    const toggleTheme = useCallback(() => {
         const newTheme = userTheme === 'light' ? 'dark' : 'light';
-
-        document.documentElement.classList.remove('theme-light')
-        document.documentElement.classList.remove('theme-dark');
-        document.documentElement.classList.add(`theme-${newTheme}`);
-
+        applyTheme(newTheme);
         setThemePreference(newTheme);
         setUserTheme(newTheme);
+    }, [userTheme, applyTheme]);
 
-    };
+    useEffect(() => {
+        const themeFromLocalStorage = getThemePreference();
+        const defaultTheme = 'light';
+    
+        const initialTheme = themeFromLocalStorage || defaultTheme;
+    
+        applyTheme(initialTheme);
+        setUserTheme(initialTheme);
+    }, [applyTheme]);
 
     return ( 
-        <div className={`bg-${userTheme}-100 min-h-screen`}> 
+        <div className="min-h-screen"> 
             {/*page header*/}
-            <header className="bg-emerald-900 text-stone-200 py-8">
+            <header className={`bg-emerald-900 text-stone-200 py-8 theme-${userTheme}`}>
                 <div className="container mx-auto flex justify-between items-center">
                     <div>
                         <h1 className="text-4xl font-bold">Admin Portal</h1>

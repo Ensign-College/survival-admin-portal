@@ -10,8 +10,8 @@
 
 .theme-light {
   --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 180, 184, 171;
-  --background-end-rgb: 240, 240, 240;
+  --background-start-rgb: 255, 255, 255;
+  --background-end-rgb: 255, 255, 255;
 }
 
 .theme-dark { 
