@@ -1,4 +1,10 @@
 import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  setThemePreference,
+  getThemePreference,
+} from "../components/themes/theme";
+import ToggleButton from "../components/themes/toggle_button";
 
 function LandingPage() {
   return (
@@ -14,9 +20,6 @@ function LandingPage() {
           </div>
           <nav>
             <ul className="flex space-x-6">
-              <li>
-                <a href="./EditModal">Edit</a>
-              </li>
               <li>
                 <a href="./HomePage">Cards Home</a>
               </li>
@@ -43,7 +46,7 @@ function LandingPage() {
         {/*sign in button*/}
         <div className="mt-8 flex justify-center">
           <a
-            href="./Login"
+            href="./AuthForm"
             className="bg-emerald-900 hover:bg-emerald-700 text-white font-semibold py-2 px-6 rounded transition duration-300"
           >
             Sign In
