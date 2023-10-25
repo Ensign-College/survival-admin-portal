@@ -1,4 +1,3 @@
-import React from "react";
 import React, { useCallback, useEffect, useState } from "react";
 import {
   setThemePreference,
@@ -46,7 +45,7 @@ function LandingPage() {
         {/*sign in button*/}
         <div className="mt-8 flex justify-center">
           <a
-            href="./AuthForm"
+            href="./Login"
             className="bg-emerald-900 hover:bg-emerald-700 text-white font-semibold py-2 px-6 rounded transition duration-300"
           >
             Sign In
