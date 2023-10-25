@@ -1,4 +1,9 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  setThemePreference,
+  getThemePreference,
+} from "../components/themes/theme";
+import ToggleButton from "../components/themes/toggle_button";
 
 function LandingPage() {
   return (
@@ -14,9 +19,6 @@ function LandingPage() {
           </div>
           <nav>
             <ul className="flex space-x-6">
-              <li>
-                <a href="./Announcements">Announcements</a>
-              </li>
               <li>
                 <a href="./HomePage">Cards Home</a>
               </li>

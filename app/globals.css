@@ -8,6 +8,18 @@
   --background-end-rgb: 255, 255, 255; 
 }
 
+.theme-light {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 255, 255, 255;
+  --background-end-rgb: 255, 255, 255;
+}
+
+.theme-dark { 
+  --foreground-rgb: 244, 249, 233;       
+  --background-start-rgb: 10, 10, 10;   
+  --background-end-rgb: 10, 10, 10;          
+}
+
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
