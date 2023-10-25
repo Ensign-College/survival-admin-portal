@@ -10,7 +10,7 @@ const Login: React.FC<LoginPageProps> = (props) => {
   return (
     <div className="h-screen flex">
       <div className="w-1/2 bg-white flex flex-col justify-center">
-        <div className="text-center p-2">
+        <div className="text-center p-10">
           <img
             src="/assets/logo.png"
             className="max-w-full max-h-full mr-4"

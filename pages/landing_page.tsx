@@ -6,10 +6,47 @@ import {
 import ToggleButton from "../components/themes/toggle_button";
 
 function LandingPage() {
+  const [userTheme, setUserTheme] = useState("");
+
+  const applyTheme = useCallback((theme: any) => {
+    document.documentElement.classList.remove("theme-light", "theme-dark");
+    document.documentElement.classList.add(`theme-${theme}`);
+  }, []);
+
+  useEffect(() => {
+    const themeFromLocalStorage = getThemePreference();
+    const defaultTheme = "light"; // Set your default theme here
+
+    // Use the theme from local storage if available, or set the default theme
+    const initialTheme = themeFromLocalStorage || defaultTheme;
+
+    setUserTheme(initialTheme);
+    applyTheme(initialTheme);
+  }, [applyTheme]);
+
+  const toggleTheme = useCallback(() => {
+    const newTheme = userTheme === "light" ? "dark" : "light";
+    applyTheme(newTheme);
+    setThemePreference(newTheme);
+    setUserTheme(newTheme);
+  }, [userTheme, applyTheme]);
+
+  useEffect(() => {
+    const themeFromLocalStorage = getThemePreference();
+    const defaultTheme = "light";
+
+    const initialTheme = themeFromLocalStorage || defaultTheme;
+
+    applyTheme(initialTheme);
+    setUserTheme(initialTheme);
+  }, [applyTheme]);
+
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <div className="min-h-screen">
       {/*page header*/}
-      <header className="bg-emerald-900 text-white py-8">
+      <header
+        className={`bg-emerald-900 text-stone-200 py-8 theme-${userTheme}`}
+      >
         <div className="container mx-auto flex justify-between items-center">
           <div>
             <h1 className="text-4xl font-bold">Admin Portal</h1>
@@ -20,13 +57,16 @@ function LandingPage() {
           <nav>
             <ul className="flex space-x-6">
               <li>
+                <a href="./Announcements">Announcements</a>
+              </li>
+              <li>
                 <a href="./HomePage">Cards Home</a>
               </li>
               <li>
                 <a href="./EditModal">Edit</a>
               </li>
               <li>
-                <a href="./index">Index</a>
+                <ToggleButton onChange={toggleTheme} />
               </li>
             </ul>
           </nav>
@@ -34,7 +74,7 @@ function LandingPage() {
       </header>
 
       {/*page body*/}
-      <main className="container mx-auto py-16">
+      <main className={`bg-${userTheme}-primary container mx-auto py-16`}>
         <div className="text-center">
           <h2 className="text-2xl font-semibold">Get Started</h2>
           <p className="mt-4 text-gray-600">

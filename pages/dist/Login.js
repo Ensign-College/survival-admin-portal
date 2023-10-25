@@ -1,14 +1,12 @@
 "use strict";
 exports.__esModule = true;
+/* eslint-disable @next/next/no-img-element */
 var react_1 = require("react");
 var Login = function (props) {
     return (react_1["default"].createElement("div", { className: "h-screen flex" },
-        " ",
         react_1["default"].createElement("div", { className: "w-1/2 bg-white flex flex-col justify-center" },
-            " ",
-            react_1["default"].createElement("div", { className: "text-center" },
-                react_1["default"].createElement("img", { src: "lib/assets/logo.png", className: " w-16 h-16 max-w-full max-h-full mr-4" }),
-                " ")),
+            react_1["default"].createElement("div", { className: "text-center p-10" },
+                react_1["default"].createElement("img", { src: "/assets/logo.png", className: "max-w-full max-h-full mr-4", alt: "Logo" }))),
         react_1["default"].createElement("form", { className: "w-1/2", style: { backgroundColor: "#006241" }, onSubmit: function () { } },
             " ",
             react_1["default"].createElement("div", { className: "h-full flex flex-col justify-center items-center" },
