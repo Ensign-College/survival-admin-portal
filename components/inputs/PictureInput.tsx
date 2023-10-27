@@ -6,7 +6,7 @@ type PictureInputProps = {
   currentCard?: Card | null
   handleDeleteImage?: (url: string) => void
   isEditOpen?: boolean
-  updateFormPictures?: (pictures: string[]) => void
+  onDataUpdate: (updatedData: string[]) => void
 }
 
 const PictureInput: React.FC<PictureInputProps> = ({
@@ -14,8 +14,8 @@ const PictureInput: React.FC<PictureInputProps> = ({
   currentCard,
   handleChange,
   handleDeleteImage,
-  updateFormPictures,
   isEditOpen,
+  onDataUpdate,
 }) => {
   const [picturesState, setPicturesState] = useState<string[]>(pictures)
   const [newPictureUrl, setNewPictureUrl] = useState<string>('')
@@ -41,6 +41,7 @@ const PictureInput: React.FC<PictureInputProps> = ({
   const handleAddPicture = () => {
     if (newPictureUrl.trim() !== '') {
       setPicturesState([...picturesState, newPictureUrl])
+      onDataUpdate([...picturesState, newPictureUrl])
       setNewPictureUrl('')
     }
   }

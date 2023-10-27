@@ -249,6 +249,7 @@ const HomePage = () => {
                 pictures={form.card_detail_pictures}
                 handleChange={handleChange}
                 isEditOpen={isEditModalOpen}
+                onDataUpdate={(updatedData) => setPicturesArray(updatedData)}
               />
 
               <button
