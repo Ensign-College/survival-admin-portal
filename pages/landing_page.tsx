@@ -28,7 +28,7 @@ function LandingPage() {
         <div className="mt-8 flex justify-center">
           <a
             href="./AuthForm"
-            className="bg-emerald-900 hover:bg-emerald-700 text-white font-semibold py-2 px-6 rounded transition duration-300"
+            className="bg-emerald-900 hover:bg-emerald-700 text-white font-semi bold py-2 px-6 rounded transition duration-300"
           >
             Sign In
           </a>
