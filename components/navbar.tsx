@@ -51,7 +51,9 @@ return (
       >
         <div className="container mx-auto flex justify-between items-center">
           <div>
+            <a href="./landing_page">
             <h1 className="text-4xl font-bold">Admin Portal</h1>
+            </a>
             <p className="mt-2 text-lg">
               Manage all your admin tasks in a single place.
             </p>
