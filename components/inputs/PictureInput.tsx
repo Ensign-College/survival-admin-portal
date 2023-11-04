@@ -19,12 +19,22 @@ const PictureInput: React.FC<PictureInputProps> = ({
 }) => {
   const [picturesState, setPicturesState] = useState<string[]>(pictures)
   const [newPictureUrl, setNewPictureUrl] = useState<string>('')
+
   const handlePictureDelete = (index: number) => {
     console.log('Delete button clicked')
+    const deletedPictureUrl = picturesState[index]
+    handleDeleteImage?.(deletedPictureUrl)
 
     const updatedPictures = picturesState.filter((_, i) => i !== index)
     setPicturesState(updatedPictures)
+
+    // Update the input field value when an image is deleted
+    setNewPictureUrl('')
+
+    // Update the parent component's state with the updated pictures array
+    onDataUpdate(updatedPictures)
   }
+
   const handlePictureInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleChange(e) // Call the handleChange prop function
     setNewPictureUrl(e.target.value) // Update the local state

@@ -68,6 +68,8 @@ const EditForm: React.FC<EditFormProps> = ({
       <PictureInput
         pictures={localCard.card_detail_pictures}
         handleChange={handleChange}
+        handleDeleteImage={handleDeleteImage}
+        onDataUpdate={() => {}}
       />
     )}
     <button
