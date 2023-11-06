@@ -8,6 +8,7 @@ import {
   handleSendImageNotification,
   handleSendNotification,
 } from "../services/notificationService";
+import Navbar from "../components/navbar";
 
 const supabase = createClient(
   SUPABASE_URL as string,
@@ -169,7 +170,7 @@ const HomePage = () => {
   };
 
   return (
-    <div className="min-h-screen p-8 bg-white">
+    <><Navbar></Navbar><div className="min-h-screen p-8">
       <h1 className="pb-8 text-2xl font-bold">
         Welcome to Survival Admin Portal
       </h1>
@@ -187,8 +188,7 @@ const HomePage = () => {
                   name="title"
                   value={form.title}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                />
+                  className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline" />
               </div>
               <div className="mb-4">
                 <label className="block mb-2 text-sm font-bold text-gray-700">
@@ -199,8 +199,7 @@ const HomePage = () => {
                   name="image_logo"
                   value={form.image_logo}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                />
+                  className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline" />
               </div>
               <div className="mb-4">
                 <label className="block mb-2 text-sm font-bold text-gray-700">
@@ -211,8 +210,7 @@ const HomePage = () => {
                   name="card_detail_id"
                   value={form.card_detail_id}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                />
+                  className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline" />
               </div>
               <div className="mb-4">
                 <button
@@ -238,8 +236,7 @@ const HomePage = () => {
               </div>
               <PictureInput
                 pictures={form.card_detail_pictures}
-                handleChange={handleChange}
-              />
+                handleChange={handleChange} />
               <button
                 type="submit"
                 className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
@@ -275,7 +272,7 @@ const HomePage = () => {
                         notificationDescription
                       );
                     }
-                  }}
+                  } }
                   className="mb-8"
                   autoComplete="off"
                 >
@@ -289,8 +286,7 @@ const HomePage = () => {
                       name="notificationTitle"
                       value={notificationTitle}
                       onChange={handleNotificationChange}
-                      className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                    />
+                      className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline" />
                   </div>
                   <div className="mb-4">
                     <label className="block mb-2 text-sm font-bold text-gray-700">
@@ -314,8 +310,7 @@ const HomePage = () => {
                       name="notificationImage"
                       value={notificationImage}
                       onChange={handleNotificationChange}
-                      className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                    />
+                      className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline" />
                   </div>
                   <button
                     type="submit"
@@ -345,8 +340,7 @@ const HomePage = () => {
                     <img
                       src={card.image_logo}
                       alt={card.title}
-                      className="object-cover w-16 h-16 max-w-full max-h-full mr-4"
-                    />
+                      className="object-cover w-16 h-16 max-w-full max-h-full mr-4" />
                   )}
                   <h2 className="flex-shrink-0 text-xl">{card.title}</h2>
                 </div>
@@ -373,8 +367,7 @@ const HomePage = () => {
                           strokeLinecap="round"
                           strokeLinejoin="round"
                           strokeWidth={2}
-                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                        />
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                       </svg>
                     </button>
                   </div>
@@ -388,15 +381,14 @@ const HomePage = () => {
                 supabase={supabase}
                 onClose={() => setIsEditModalOpen(false)}
                 onUpdate={handleCardUpdate}
-                onSubmit={handleEdit}
-              />
+                onSubmit={handleEdit} />
             )}
           </div>
         </div>
       ) : (
         <AuthForm onAuthenticated={handleAuthenticated} />
       )}
-    </div>
+    </div></>
   );
 };
 
