@@ -99,15 +99,6 @@ const HomePage = () => {
       setCards(cards.filter((card) => card.id !== id));
     }
   };
-
-    const TOOLBAR_OPTIONS = [
-        ["bold", "italic", "underline", "strike", "blockquote", "link"],
-    ];
-
-    const extractText = (html: string) => {
-        return html.replace(/<[^>]*>?/gm, '');
-    };
-
   const handleEdit = (id: number) => {
     // @ts-ignore
     const card = cards.find((card) => card.id === id);
