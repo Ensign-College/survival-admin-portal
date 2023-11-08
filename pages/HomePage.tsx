@@ -7,6 +7,7 @@ import PictureInput from "../components/inputs/PictureInput";
 import { handleSendImageNotification, handleSendNotification } from '../services/notificationService';
 import "react-quill/dist/quill.snow.css";
 import dynamic from "next/dynamic";
+import {MarkDownEditorField} from "../components/inputs/InputComponents";
 
 const supabase = createClient(SUPABASE_URL as string, SUPABASE_API_KEY as string);
 type Card = {
@@ -94,23 +95,6 @@ const HomePage = () => {
     const extractText = (html: string) => {
         return html.replace(/<[^>]*>?/gm, '');
     };
-
-
-    // @ts-ignore
-    const handleQuillChangeTitle = (value) => {
-        setForm({
-            ...form,
-            title: extractText(value),
-        });
-    };
-    // @ts-ignore
-    const handleQuillChangeCardDetail = (value) => {
-        setForm({
-            ...form,
-            card_detail_text: value,
-        });
-    };
-
     const handleEdit = (id: number) => {
         // @ts-ignore
         const card = cards.find((card) => card.id === id);
@@ -125,6 +109,24 @@ const HomePage = () => {
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setForm({...form, [e.target.name]: e.target.value});
+    };
+    const handleChangeEditor = (e: ChangeEvent<HTMLInputElement>) => {
+        // @ts-ignore
+        setForm((prev) => {
+            return {
+                ...prev,
+                card_detail_text: e
+            }
+        })
+    };
+    const handleChangeTitleEditor = (e: ChangeEvent<HTMLInputElement>) => {
+        // @ts-ignore
+        setForm((prev) => {
+            return {
+                ...prev,
+                title: e
+            }
+        })
     };
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -180,7 +182,6 @@ const HomePage = () => {
         e.preventDefault()
         setIsCardDetailsTextOpen(!isCardDetailsTextOpen);
     };
-    const [markdownInput, setMarkdownInput] = React.useState("");
 
 
 
@@ -193,23 +194,7 @@ const HomePage = () => {
                     <h1 className="mb-4 text-4xl">New Card</h1>
                     <form onSubmit={handleSubmit} className="mb-8">
                         <div className="mb-4">
-                            <label className="block mb-2 text-sm font-bold text-gray-700">Title:</label>
-                            <ReactQuill theme="snow"
-                                        value={form.title}
-                                        onChange={handleQuillChangeTitle}
-                                        modules={{
-                                            toolbar: {
-                                                container: TOOLBAR_OPTIONS
-                                            }
-                                        }}
-                            />
-                            {/*<input*/}
-                            {/*    type="text"*/}
-                            {/*    name="title"*/}
-                            {/*    value={form.title}*/}
-                            {/*    onChange={handleChange}*/}
-                            {/*    className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"*/}
-                            {/*/>*/}
+                            <MarkDownEditorField label={"Title"} value={form.title} handleQuillChange={handleChangeTitleEditor}/>
                         </div>
                         <div className="mb-4">
                             <label className="block mb-2 text-sm font-bold text-gray-700">Image Logo URL:</label>
@@ -237,23 +222,7 @@ const HomePage = () => {
                             </button>
                             {isCardDetailsTextOpen && (
                                 <div className="mt-2">
-                                    <label className="block mb-2 text-sm font-bold text-gray-700">Card Details Text:</label>
-                                    {/*<textarea*/}
-                                    {/*    name="card_detail_text"*/}
-                                    {/*    value={form.card_detail_text}*/}
-                                    {/*    // @ts-ignore*/}
-                                    {/*    onChange={handleChange}*/}
-                                    {/*    className="w-full h-32 px-3 py-2 text-gray-700 border rounded shadow appearance-none resize-y focus:outline-none focus:shadow-outline"*/}
-                                    {/*></textarea>*/}
-                                    <ReactQuill theme="snow"
-                                                value={form.card_detail_text}
-                                                onChange={handleQuillChangeCardDetail}
-                                                modules={{
-                                                    toolbar: {
-                                                        container: TOOLBAR_OPTIONS
-                                                    }
-                                                }}
-                                    />
+                                    <MarkDownEditorField label={"Card Details Text"} value={form.card_detail_text} handleQuillChange={handleChangeEditor}/>
                                 </div>
                             )}
                         </div>

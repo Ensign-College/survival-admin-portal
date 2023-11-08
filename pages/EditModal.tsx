@@ -79,8 +79,18 @@ const EditModal: React.FC<EditModalProps> = ({ card,supabase, onClose, onSubmit,
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         if (localCard) {
-            const { name, value } = e.target;
-            setLocalCard({ ...localCard, [name]: value });
+            if (e.target === undefined){
+                // @ts-ignore
+                setLocalCard((prev) => {
+                    return {
+                        ...prev,
+                        card_detail_text: e
+                    }
+                })
+            }else {
+                const { name, value } = e.target;
+                setLocalCard({ ...localCard, [name]: value });
+            }
         }
     };
 
