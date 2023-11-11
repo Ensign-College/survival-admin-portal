@@ -59,7 +59,7 @@ const PictureInput: React.FC<PictureInputProps> = ({
   return (
     <div className="mb-4">
       <label className="mb-2 block text-sm font-bold text-gray-700">
-        Card Detail Pictures (comma-separated URLs):
+        Images:
       </label>
       <div className="flex">
         <input

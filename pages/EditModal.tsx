@@ -42,7 +42,32 @@ const EditModal: React.FC<EditModalProps> = ({
       })
     }
   }, [card, cardDetails])
-  const [pictureArray, setPictureArray] = useState<string>('')
+  const [picturesArray, setPicturesArray] = useState([] as string[])
+  // useEffect(() => {
+  //   if (localCard) {
+  //     // Split the card_detail_pictures string into an array when it changes
+  //     const newPictureArray = localCard.card_detail_pictures.join(',')
+
+  //     // Update the pictureArray state
+  //     setPictureArray(newPictureArray)
+  //   }
+  // }, [localCard?.card_detail_pictures])
+  useEffect(() => {
+    let newItem = ''
+    if (localCard) {
+      // const characters = localCard.card_detail_pictures
+
+      // if (characters) {
+      //   for (let i = 0; i < characters.length; i++) {
+      //     newItem += characters[i]
+      //   }
+      // }
+
+      //const updatedArray = [...picturesArray, newItem]
+      setPicturesArray(localCard.card_detail_pictures)
+    }
+  }, [localCard?.card_detail_pictures])
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (localCard) {
@@ -64,18 +89,10 @@ const EditModal: React.FC<EditModalProps> = ({
       }
       let cardDetailPicturesArray: string[] = []
 
-      useEffect(() => {
-        // Split the card_detail_pictures string into an array when it changes
-        const newPictureArray = localCard.card_detail_pictures.join(',')
-
-        // Update the pictureArray state
-        setPictureArray(newPictureArray)
-      }, [localCard.card_detail_pictures])
-
-      if (localCard.card_detail_pictures) {
-        // Split the comma-separated string into an array
-        cardDetailPicturesArray = pictureArray.split(',').map((s) => s.trim())
-      }
+      // if (localCard.card_detail_pictures) {
+      //   // Split the comma-separated string into an array
+      //   cardDetailPicturesArray = pictureArray.split(',').map((s) => s.trim())
+      // }
 
       // Update card details in Supabase
       const { data: updatedCardDetails, error: cardDetailsError } =
@@ -83,7 +100,7 @@ const EditModal: React.FC<EditModalProps> = ({
           .from('card_details')
           .update({
             text: localCard.card_detail_text,
-            pictures: cardDetailPicturesArray,
+            pictures: picturesArray,
             // ... other fields ...
           })
           .eq('card_id', localCard.id)
@@ -113,36 +130,17 @@ const EditModal: React.FC<EditModalProps> = ({
 
   const handleDeleteImage = (imageUrl: string) => {
     if (localCard) {
-      const cardDetailPicturesArray = Array.isArray(
-        localCard.card_detail_pictures,
+      const cardDetailPicturesArray = localCard.card_detail_pictures
+      const newCardDetailPictures = cardDetailPicturesArray.filter(
+        (url: string) => url !== imageUrl,
       )
-        ? localCard.card_detail_pictures
-        : []
-
-      const newCardDetailPictures = cardDetailPicturesArray
-        .filter((url: string) => url !== imageUrl)
-        .join(',')
 
       setLocalCard({
         ...localCard,
-        card_detail_pictures: newCardDetailPictures
-          .split(',')
-          .map((s) => s.trim()),
+        card_detail_pictures: newCardDetailPictures,
       })
     }
   }
-  // const handleDeleteImage = (imageUrl: string) => {
-  //   if (localCard) {
-  //     const cardDetailPicturesArray = localCard.card_detail_pictures
-  //     const newCardDetailPictures = cardDetailPicturesArray
-  //       .filter((url: string) => url !== imageUrl)
-  //       .join(',')
-  //     setLocalCard({
-  //       ...localCard,
-  //       card_detail_pictures: newCardDetailPictures,
-  //     })
-  //   }
-  // }
 
   return (
     <div className="modal-overlay">
