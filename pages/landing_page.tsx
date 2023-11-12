@@ -8,12 +8,11 @@ import { BrowserRouter } from "react-router-dom";
 import Navbar from "../components/navbar";
 
 function LandingPage() {
-
   return (
     <div className="min-h-screen">
       {/*page header*/}
 
-      <Navbar></Navbar>
+      {/* <Navbar></Navbar> */}
 
       {/*page body*/}
       <main className="container mx-auto py-16">

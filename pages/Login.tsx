@@ -71,10 +71,10 @@ const Login: React.FC<LoginPageProps> = (props) => {
               {" "}
               {/* Center the content horizontally */}
               <button
-                type="submit"
+                //
                 className="w-full bg-[#006241] text-white font-semibold py-2 rounded-md hover:bg-blue-600 border border-white"
               >
-                Sign In
+                <a href="./HomePage">Sign In</a>
               </button>
             </div>
           </div>

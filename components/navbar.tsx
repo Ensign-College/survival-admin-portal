@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
 import ToggleButton from "../components/themes/toggle_button";
 import React, { useCallback, useEffect, useState } from "react";
 import {
@@ -7,8 +7,6 @@ import {
 } from "../components/themes/theme";
 
 function Navbar() {
-
-
   const [userTheme, setUserTheme] = useState("");
 
   const applyTheme = useCallback((theme: any) => {
@@ -44,42 +42,36 @@ function Navbar() {
     setUserTheme(initialTheme);
   }, [applyTheme]);
 
-return (
-
-<header
-        className={`bg-emerald-900 text-stone-200 py-8 theme-${userTheme}`}
-      >
-        <div className="container mx-auto flex justify-between items-center">
-          <div>
-            <a href="./landing_page">
+  return (
+    <header className={`bg-emerald-900 text-stone-200 py-8 theme-${userTheme}`}>
+      <div className="container mx-auto flex justify-between items-center">
+        <div>
+          <a href="./landing_page">
             <h1 className="text-4xl font-bold">Admin Portal</h1>
-            </a>
-            <p className="mt-2 text-lg">
-              Manage all your admin tasks in a single place.
-            </p>
-          </div>
-          <nav>
-            <ul className="flex space-x-6">
-              <li>
-                <a href="./Announcements">Announcements</a>
-              </li>
-              <li>
-                <a href="./HomePage">Cards Home</a>
-              </li>
-              <li>
-                <a href="./EditModal">Edit</a>
-              </li>
-              <li>
-                <ToggleButton onChange={toggleTheme} />
-              </li>
-            </ul>
-          </nav>
+          </a>
+          <p className="mt-2 text-lg">
+            Manage all your admin tasks in a single place.
+          </p>
         </div>
-      </header>
-  
-)
-    
-
+        <nav>
+          <ul className="flex space-x-6">
+            <li>
+              <a href="./Announcements">Announcements</a>
+            </li>
+            <li>
+              <a href="./HomePage">Home</a>
+            </li>
+            {/* <li>
+                <a href="./EditModal">Edit</a>
+              </li> */}
+            <li>
+              <ToggleButton onChange={toggleTheme} />
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+  );
 }
 
 export default Navbar;
