@@ -1,5 +1,5 @@
 import React from "react";
-import { TextAreaField, InputField } from '../inputs/InputComponents'; // if these are in a separate file
+import {InputField, MarkDownEditorField, MarkDownEditorTitleField} from '../inputs/InputComponents'; // if these are in a separate file
 
 interface EditFormProps {
     localCard: Card; // Adjust this type as needed based on your Card type
@@ -9,10 +9,10 @@ interface EditFormProps {
 }
 const EditForm: React.FC<EditFormProps> = ({ localCard, onSubmit, handleChange, handleDeleteImage }) => (
     <form onSubmit={onSubmit}>
-        <InputField label="Title" name="title" value={localCard.title} onChange={handleChange} />
+        <MarkDownEditorTitleField label={"Title"} value={localCard.title} handleQuillChange={handleChange}/>
         <InputField label="Image Logo URL" name="image_logo" value={localCard.image_logo} onChange={handleChange} />
-        <InputField label="Card details id" name="card_detail_id" value={localCard.card_detail_id.toString()} onChange={handleChange} type="number" />
-        <TextAreaField label="Card Details Text" name="card_detail_text" value={localCard.card_detail_text} onChange={handleChange} />
+        <InputField label="Card details id" name="card_detail_id" value={localCard.card_detail_id ? localCard.card_detail_id.toString() : ""} onChange={handleChange} type="number" />
+        <MarkDownEditorField label={"Card Details Text"} value={localCard.card_detail_text} handleQuillChange={handleChange}/>
         <label className="block mb-2 text-sm font-bold text-gray-700">Card Detail Pictures:</label>
         <div className="flex space-x-2 mb-2">
             {localCard.card_detail_pictures && localCard.card_detail_pictures.split(',').map((pictureUrl, index) => (

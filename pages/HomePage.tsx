@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { useState, useEffect, ChangeEvent, FormEvent } from "react";
+import { useState, useEffect, ChangeEvent, FormEvent, useMemo} from "react";
 import EditModal from "./EditModal";
 import { SUPABASE_API_KEY, SUPABASE_URL } from "../services/supabaseClients";
 import AuthForm from "./AuthForm";
@@ -9,6 +9,11 @@ import {
   handleSendNotification,
 } from "../services/notificationService";
 import Navbar from "../components/navbar";
+import "react-quill/dist/quill.snow.css";
+import dynamic from "next/dynamic";
+import {MarkDownEditorField} from "../components/inputs/InputComponents";
+
+
 
 const supabase = createClient(
   SUPABASE_URL as string,
@@ -31,6 +36,9 @@ const HomePage = () => {
     card_detail_pictures: "", // Initialize the card detail pictures field
   });
   const [isCardDetailsTextOpen, setIsCardDetailsTextOpen] = useState(false);
+  const ReactQuill = useMemo(() => dynamic(() => import('react-quill'), { ssr: false }),[]);
+
+
 
   useEffect(() => {
     fetchCards();
@@ -91,7 +99,6 @@ const HomePage = () => {
       setCards(cards.filter((card) => card.id !== id));
     }
   };
-
   const handleEdit = (id: number) => {
     // @ts-ignore
     const card = cards.find((card) => card.id === id);
@@ -103,9 +110,28 @@ const HomePage = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [currentCard, setCurrentCard] = useState(null);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setForm({...form, [e.target.name]: e.target.value});
+    };
+    const handleChangeEditor = (e: ChangeEvent<HTMLInputElement>) => {
+        // @ts-ignore
+        setForm((prev) => {
+            return {
+                ...prev,
+                card_detail_text: e
+            }
+        })
+    };
+    const handleChangeTitleEditor = (e: ChangeEvent<HTMLInputElement>) => {
+        // @ts-ignore
+        setForm((prev) => {
+            return {
+                ...prev,
+                title: e
+            }
+        })
+    };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -165,92 +191,71 @@ const HomePage = () => {
     );
   };
 
-  const toggleCardDetailsText = () => {
-    setIsCardDetailsTextOpen(!isCardDetailsTextOpen);
-  };
+    // @ts-ignore
+    const toggleCardDetailsText = (e) => {
+        e.preventDefault()
+        setIsCardDetailsTextOpen(!isCardDetailsTextOpen);
+    };
 
-  return (
-    <><Navbar></Navbar><div className="min-h-screen p-8">
-      <h1 className="pb-8 text-2xl font-bold">
-        Welcome to Survival Admin Portal
-      </h1>
-      {isAuthenticated ? (
-        <div className="flex flex-col p-2 pt-0 md:p-8 md:flex-row">
-          <div className="w-full pr-8 md:w-1/3 lg:w-full">
-            <h1 className="mb-4 text-4xl">New Card</h1>
-            <form onSubmit={handleSubmit} className="mb-8">
-              <div className="mb-4">
-                <label className="block mb-2 text-sm font-bold text-gray-700">
-                  Title:
-                </label>
-                <input
-                  type="text"
-                  name="title"
-                  value={form.title}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline" />
-              </div>
-              <div className="mb-4">
-                <label className="block mb-2 text-sm font-bold text-gray-700">
-                  Image Logo URL:
-                </label>
-                <input
-                  type="text"
-                  name="image_logo"
-                  value={form.image_logo}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline" />
-              </div>
-              <div className="mb-4">
-                <label className="block mb-2 text-sm font-bold text-gray-700">
-                  Card details id:
-                </label>
-                <input
-                  type="number"
-                  name="card_detail_id"
-                  value={form.card_detail_id}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline" />
-              </div>
-              <div className="mb-4">
-                <button
-                  onClick={toggleCardDetailsText}
-                  className="text-blue-500 hover:underline"
-                >
-                  {isCardDetailsTextOpen ? "Collapse" : "Add Card Details Text"}
-                </button>
-                {isCardDetailsTextOpen && (
-                  <div className="mt-2">
-                    <label className="block mb-2 text-sm font-bold text-gray-700">
-                      Card Details Text:
-                    </label>
-                    <textarea
-                      name="card_detail_text"
-                      value={form.card_detail_text}
-                      // @ts-ignore
-                      onChange={handleChange}
-                      className="w-full h-32 px-3 py-2 text-gray-700 border rounded shadow appearance-none resize-y focus:outline-none focus:shadow-outline"
-                    ></textarea>
-                  </div>
-                )}
-              </div>
-              <PictureInput
-                pictures={form.card_detail_pictures}
-                handleChange={handleChange} />
-              <button
-                type="submit"
-                className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
-              >
-                Insert New Card
-              </button>
-            </form>
-            <div className="w-full pr-8 md:w-1/3 lg:w-full">
-              <button
-                onClick={toggleNotificationForm}
-                className="px-4 py-2 mb-4 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
-              >
-                Notifications
-              </button>
+
+
+    return (
+        <><Navbar></Navbar><div className="min-h-screen p-8">
+            <h1 className="pb-8 text-2xl font-bold">Welcome to Survival Admin Portal</h1>
+            {isAuthenticated ? (
+                <div className="flex flex-col p-2 pt-0 md:p-8 md:flex-row">
+                <div className='w-full pr-8 md:w-1/3 lg:w-full'>
+                    <h1 className="mb-4 text-4xl">New Card</h1>
+                    <form onSubmit={handleSubmit} className="mb-8">
+                        <div className="mb-4">
+                            <MarkDownEditorField label={"Title"} value={form.title} handleQuillChange={handleChangeTitleEditor}/>
+                        </div>
+                        <div className="mb-4">
+                            <label className="block mb-2 text-sm font-bold text-gray-700">Image Logo URL:</label>
+                            <input
+                                type="text"
+                                name="image_logo"
+                                value={form.image_logo}
+                                onChange={handleChange}
+                                className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label className="block mb-2 text-sm font-bold text-gray-700">Card details id:</label>
+                            <input
+                                type="number"
+                                name="card_detail_id"
+                                value={form.card_detail_id}
+                                onChange={handleChange}
+                                className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <button onClick={(e)=> toggleCardDetailsText(e)}
+                                    className="text-blue-500 hover:underline">
+                                {isCardDetailsTextOpen ? "Collapse" : "Add Card Details Text"}
+                            </button>
+                            {isCardDetailsTextOpen && (
+                                <div className="mt-2">
+                                    <MarkDownEditorField label={"Card Details Text"} value={form.card_detail_text} handleQuillChange={handleChangeEditor}/>
+                                </div>
+                            )}
+                        </div>
+                        <PictureInput pictures={form.card_detail_pictures} handleChange={handleChange} />
+                        <button
+                            type="submit"
+                            className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+                        >
+                            Insert New Card
+                        </button>
+                    </form>
+                    <div className='w-full pr-8 md:w-1/3 lg:w-full'>
+                        <button
+                            onClick={toggleNotificationForm}
+                            className="px-4 py-2 mb-4 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+                        >
+                            Notifications
+                        </button>
 
               {isNotificationFormVisible && (
                 <form
@@ -342,7 +347,7 @@ const HomePage = () => {
                       alt={card.title}
                       className="object-cover w-16 h-16 max-w-full max-h-full mr-4" />
                   )}
-                  <h2 className="flex-shrink-0 text-xl">{card.title}</h2>
+                    <p dangerouslySetInnerHTML={{__html: card.title}}/>
                 </div>
                 <div className="flex button-container">
                   <button

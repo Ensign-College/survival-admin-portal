@@ -34,8 +34,14 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+.env.development
+.idea/inspectionProfiles/Project_Default.xml
+.idea/vcs.xml
+.idea/workspace.xml
+package-lock.json
+
+
 #firebase
 firebase.json
 
 .env
-package-lock.json

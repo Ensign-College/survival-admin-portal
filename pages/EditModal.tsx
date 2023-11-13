@@ -96,14 +96,23 @@ const EditModal: React.FC<EditModalProps> = ({
     onClose();
   };
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    if (localCard) {
-      const { name, value } = e.target;
-      setLocalCard({ ...localCard, [name]: value });
-    }
-  };
+
+    const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        if (localCard) {
+            if (e.target === undefined){
+                // @ts-ignore
+                setLocalCard((prev) => {
+                    return {
+                        ...prev,
+                        card_detail_text: e
+                    }
+                })
+            }else {
+                const { name, value } = e.target;
+                setLocalCard({ ...localCard, [name]: value });
+            }
+        }
+    };
 
   const handleDeleteImage = (imageUrl: string) => {
     if (localCard) {
