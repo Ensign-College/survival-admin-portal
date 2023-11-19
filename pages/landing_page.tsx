@@ -1,20 +1,8 @@
-import React, { useCallback, useEffect, useState } from "react";
-import {
-  setThemePreference,
-  getThemePreference,
-} from "../components/themes/theme";
-import ToggleButton from "../components/themes/toggle_button";
-import { BrowserRouter } from "react-router-dom";
-import Navbar from "../components/navbar";
+import React from "react";
 
 function LandingPage() {
   return (
-    <div className="min-h-screen">
-      {/*page header*/}
-
-      {/* <Navbar></Navbar> */}
-
-      {/*page body*/}
+    <div className="min-h-screen  flex items-center justify-center">
       <main className="container mx-auto py-16">
         <div className="text-center">
           <h2 className="text-2xl font-semibold">Get Started</h2>

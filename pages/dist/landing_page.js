@@ -2,7 +2,7 @@
 exports.__esModule = true;
 var react_1 = require("react");
 function LandingPage() {
-    return (react_1["default"].createElement("div", { className: "min-h-screen" },
+    return (react_1["default"].createElement("div", { className: "min-h-screen  flex items-center justify-center" },
         react_1["default"].createElement("main", { className: "container mx-auto py-16" },
             react_1["default"].createElement("div", { className: "text-center" },
                 react_1["default"].createElement("h2", { className: "text-2xl font-semibold" }, "Get Started"),
