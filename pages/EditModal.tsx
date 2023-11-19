@@ -134,6 +134,11 @@ const EditModal: React.FC<EditModalProps> = ({
       const newCardDetailPictures = cardDetailPicturesArray.filter(
         (url: string) => url !== imageUrl,
       )
+      console.log('Before deletion:', localCard)
+      console.log('After deletion:', {
+        ...localCard,
+        card_detail_pictures: newCardDetailPictures,
+      })
 
       setLocalCard({
         ...localCard,
