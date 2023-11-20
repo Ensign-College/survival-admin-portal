@@ -1,10 +1,13 @@
 import { createClient } from "@supabase/supabase-js";
-import { useState, useEffect, ChangeEvent, FormEvent } from "react";
+import { useState, useEffect, ChangeEvent, FormEvent, useMemo } from "react";
 import EditModal from "./EditModal";
 import { SUPABASE_API_KEY, SUPABASE_URL } from "../services/supabaseClients";
 import AuthForm from "./AuthForm";
 import PictureInput from "../components/inputs/PictureInput";
 import Navbar from "../components/navbar";
+import "react-quill/dist/quill.snow.css";
+import dynamic from "next/dynamic";
+import { MarkDownEditorField } from "../components/inputs/InputComponents";
 
 const supabase = createClient(
   SUPABASE_URL as string,
@@ -27,6 +30,10 @@ const HomePage = () => {
     card_detail_pictures: "", // Initialize the card detail pictures field
   });
   const [isCardDetailsTextOpen, setIsCardDetailsTextOpen] = useState(false);
+  const ReactQuill = useMemo(
+    () => dynamic(() => import("react-quill"), { ssr: false }),
+    []
+  );
 
   useEffect(() => {
     fetchCards();
@@ -72,7 +79,6 @@ const HomePage = () => {
       setCards(cards.filter((card) => card.id !== id));
     }
   };
-
   const handleEdit = (id: number) => {
     // @ts-ignore
     const card = cards.find((card) => card.id === id);
@@ -86,6 +92,24 @@ const HomePage = () => {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+  const handleChangeEditor = (e: ChangeEvent<HTMLInputElement>) => {
+    // @ts-ignore
+    setForm((prev) => {
+      return {
+        ...prev,
+        card_detail_text: e,
+      };
+    });
+  };
+  const handleChangeTitleEditor = (e: ChangeEvent<HTMLInputElement>) => {
+    // @ts-ignore
+    setForm((prev) => {
+      return {
+        ...prev,
+        title: e,
+      };
+    });
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -146,7 +170,9 @@ const HomePage = () => {
     );
   };
 
-  const toggleCardDetailsText = () => {
+  // @ts-ignore
+  const toggleCardDetailsText = (e) => {
+    e.preventDefault();
     setIsCardDetailsTextOpen(!isCardDetailsTextOpen);
   };
 
@@ -233,7 +259,87 @@ const HomePage = () => {
                   Insert New Card
                 </button>
               </form>
+              <div className="w-full pr-8 md:w-1/3 lg:w-full">
+                <button
+                  onClick={toggleNotificationForm}
+                  className="px-4 py-2 mb-4 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+                >
+                  Notifications
+                </button>
+
+                {isNotificationFormVisible && (
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      if (notificationImage) {
+                        // Call handleSendImageNotification if notificationImage has text
+                        handleSendImageNotification(
+                          "all",
+                          notificationTitle,
+                          notificationDescription,
+                          notificationImage
+                        );
+                      } else {
+                        // Call handleSendNotification otherwise
+                        handleSendNotification(
+                          "all",
+                          notificationTitle,
+                          notificationDescription
+                        );
+                      }
+                    }}
+                    className="mb-8"
+                    autoComplete="off"
+                  >
+                    <div className="mb-4">
+                      <label className="block mb-2 text-sm font-bold text-gray-700">
+                        Title:
+                      </label>
+                      <input
+                        autoComplete="off"
+                        type="text"
+                        name="notificationTitle"
+                        value={notificationTitle}
+                        onChange={handleNotificationChange}
+                        className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label className="block mb-2 text-sm font-bold text-gray-700">
+                        Description:
+                      </label>
+                      <textarea
+                        autoComplete="off"
+                        name="notificationDescription"
+                        value={notificationDescription}
+                        onChange={handleNotificationChange}
+                        className="w-full h-32 px-3 py-2 text-gray-700 border rounded shadow appearance-none resize-y focus:outline-none focus:shadow-outline"
+                      ></textarea>
+                    </div>
+                    <div className="mb-4">
+                      <label className="block mb-2 text-sm font-bold text-gray-700">
+                        Image URL:
+                      </label>
+                      <input
+                        autoComplete="off"
+                        type="text"
+                        name="notificationImage"
+                        value={notificationImage}
+                        onChange={handleNotificationChange}
+                        className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+                    >
+                      Send Notification
+                    </button>
+                  </form>
+                )}
+              </div>
             </div>
+
             <div className="w-full space-y-4 md:w-2/3 lg:w-full">
               <h1 className="mb-4 text-4xl">Current Cards</h1>
               {cards.map((card, index) => (
@@ -287,6 +393,7 @@ const HomePage = () => {
                   </div>
                 </div>
               ))}
+
               {isEditModalOpen && (
                 <EditModal
                   card={currentCard}
