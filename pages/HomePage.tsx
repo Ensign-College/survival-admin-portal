@@ -6,7 +6,6 @@ import AuthForm from "./AuthForm";
 import PictureInput from "../components/inputs/PictureInput";
 import Navbar from "../components/navbar";
 import "react-quill/dist/quill.snow.css";
-import dynamic from "next/dynamic";
 import { MarkDownEditorField } from "../components/inputs/InputComponents";
 
 const supabase = createClient(
@@ -30,19 +29,13 @@ const HomePage = () => {
     card_detail_pictures: "", // Initialize the card detail pictures field
   });
   const [isCardDetailsTextOpen, setIsCardDetailsTextOpen] = useState(false);
-  const ReactQuill = useMemo(
-    () => dynamic(() => import("react-quill"), { ssr: false }),
-    []
-  );
 
   useEffect(() => {
     fetchCards();
   }, []);
   const [isNotificationFormVisible, setIsNotificationFormVisible] =
     useState(false);
-  const toggleNotificationForm = () => {
-    setIsNotificationFormVisible(!isNotificationFormVisible);
-  };
+
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   const handleAuthenticated = () => {
@@ -189,15 +182,10 @@ const HomePage = () => {
               <h1 className="mb-4 text-4xl">New Card</h1>
               <form onSubmit={handleSubmit} className="mb-8">
                 <div className="mb-4">
-                  <label className="block mb-2 text-sm font-bold text-gray-700">
-                    Title:
-                  </label>
-                  <input
-                    type="text"
-                    name="title"
+                  <MarkDownEditorField
+                    label={"Title"}
                     value={form.title}
-                    onChange={handleChange}
-                    className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                    handleQuillChange={handleChangeTitleEditor}
                   />
                 </div>
                 <div className="mb-4">
@@ -226,7 +214,7 @@ const HomePage = () => {
                 </div>
                 <div className="mb-4">
                   <button
-                    onClick={toggleCardDetailsText}
+                    onClick={(e) => toggleCardDetailsText(e)}
                     className="text-blue-500 hover:underline"
                   >
                     {isCardDetailsTextOpen
@@ -235,16 +223,11 @@ const HomePage = () => {
                   </button>
                   {isCardDetailsTextOpen && (
                     <div className="mt-2">
-                      <label className="block mb-2 text-sm font-bold text-gray-700">
-                        Card Details Text:
-                      </label>
-                      <textarea
-                        name="card_detail_text"
+                      <MarkDownEditorField
+                        label={"Card Details Text"}
                         value={form.card_detail_text}
-                        // @ts-ignore
-                        onChange={handleChange}
-                        className="w-full h-32 px-3 py-2 text-gray-700 border rounded shadow appearance-none resize-y focus:outline-none focus:shadow-outline"
-                      ></textarea>
+                        handleQuillChange={handleChangeEditor}
+                      />
                     </div>
                   )}
                 </div>
@@ -259,14 +242,6 @@ const HomePage = () => {
                   Insert New Card
                 </button>
               </form>
-              <div className="w-full pr-8 md:w-1/3 lg:w-full">
-                <button
-                  onClick={toggleNotificationForm}
-                  className="px-4 py-2 mb-4 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
-                >
-                  Notifications
-                </button>
-              </div>
             </div>
 
             <div className="w-full space-y-4 md:w-2/3 lg:w-full">
@@ -289,7 +264,7 @@ const HomePage = () => {
                         className="object-cover w-16 h-16 max-w-full max-h-full mr-4"
                       />
                     )}
-                    <h2 className="flex-shrink-0 text-xl">{card.title}</h2>
+                    <p dangerouslySetInnerHTML={{ __html: card.title }} />
                   </div>
                   <div className="flex button-container">
                     <button

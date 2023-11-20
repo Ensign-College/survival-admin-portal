@@ -61,6 +61,8 @@ var supabaseClients_1 = require("../services/supabaseClients");
 var AuthForm_1 = require("./AuthForm");
 var PictureInput_1 = require("../components/inputs/PictureInput");
 var navbar_1 = require("../components/navbar");
+require("react-quill/dist/quill.snow.css");
+var InputComponents_1 = require("../components/inputs/InputComponents");
 var supabase = supabase_js_1.createClient(supabaseClients_1.SUPABASE_URL, supabaseClients_1.SUPABASE_API_KEY);
 var HomePage = function () {
     var _a = react_1.useState([]), cards = _a[0], setCards = _a[1];
@@ -76,9 +78,6 @@ var HomePage = function () {
         fetchCards();
     }, []);
     var _d = react_1.useState(false), isNotificationFormVisible = _d[0], setIsNotificationFormVisible = _d[1];
-    var toggleNotificationForm = function () {
-        setIsNotificationFormVisible(!isNotificationFormVisible);
-    };
     var _e = react_1.useState(false), isAuthenticated = _e[0], setIsAuthenticated = _e[1];
     var handleAuthenticated = function () {
         setIsAuthenticated(true);
@@ -142,6 +141,18 @@ var HomePage = function () {
         var _a;
         setForm(__assign(__assign({}, form), (_a = {}, _a[e.target.name] = e.target.value, _a)));
     };
+    var handleChangeEditor = function (e) {
+        // @ts-ignore
+        setForm(function (prev) {
+            return __assign(__assign({}, prev), { card_detail_text: e });
+        });
+    };
+    var handleChangeTitleEditor = function (e) {
+        // @ts-ignore
+        setForm(function (prev) {
+            return __assign(__assign({}, prev), { title: e });
+        });
+    };
     var handleSubmit = function (e) { return __awaiter(void 0, void 0, void 0, function () {
         var newCard, _a, data, error, firstCard, cardError, newCardDetails, firstCardDetail, response, updatedCard;
         return __generator(this, function (_b) {
@@ -204,7 +215,9 @@ var HomePage = function () {
             return prevCards.map(function (card) { return (card.id === updatedCard.id ? updatedCard : card); });
         });
     };
-    var toggleCardDetailsText = function () {
+    // @ts-ignore
+    var toggleCardDetailsText = function (e) {
+        e.preventDefault();
         setIsCardDetailsTextOpen(!isCardDetailsTextOpen);
     };
     return (React.createElement(React.Fragment, null,
@@ -216,8 +229,7 @@ var HomePage = function () {
                     React.createElement("h1", { className: "mb-4 text-4xl" }, "New Card"),
                     React.createElement("form", { onSubmit: handleSubmit, className: "mb-8" },
                         React.createElement("div", { className: "mb-4" },
-                            React.createElement("label", { className: "block mb-2 text-sm font-bold text-gray-700" }, "Title:"),
-                            React.createElement("input", { type: "text", name: "title", value: form.title, onChange: handleChange, className: "w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline" })),
+                            React.createElement(InputComponents_1.MarkDownEditorField, { label: "Title", value: form.title, handleQuillChange: handleChangeTitleEditor })),
                         React.createElement("div", { className: "mb-4" },
                             React.createElement("label", { className: "block mb-2 text-sm font-bold text-gray-700" }, "Image Logo URL:"),
                             React.createElement("input", { type: "text", name: "image_logo", value: form.image_logo, onChange: handleChange, className: "w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline" })),
@@ -225,14 +237,11 @@ var HomePage = function () {
                             React.createElement("label", { className: "block mb-2 text-sm font-bold text-gray-700" }, "Card details id:"),
                             React.createElement("input", { type: "number", name: "card_detail_id", value: form.card_detail_id, onChange: handleChange, className: "w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline" })),
                         React.createElement("div", { className: "mb-4" },
-                            React.createElement("button", { onClick: toggleCardDetailsText, className: "text-blue-500 hover:underline" }, isCardDetailsTextOpen
+                            React.createElement("button", { onClick: function (e) { return toggleCardDetailsText(e); }, className: "text-blue-500 hover:underline" }, isCardDetailsTextOpen
                                 ? "Collapse"
                                 : "Add Card Details Text"),
                             isCardDetailsTextOpen && (React.createElement("div", { className: "mt-2" },
-                                React.createElement("label", { className: "block mb-2 text-sm font-bold text-gray-700" }, "Card Details Text:"),
-                                React.createElement("textarea", { name: "card_detail_text", value: form.card_detail_text, 
-                                    // @ts-ignore
-                                    onChange: handleChange, className: "w-full h-32 px-3 py-2 text-gray-700 border rounded shadow appearance-none resize-y focus:outline-none focus:shadow-outline" })))),
+                                React.createElement(InputComponents_1.MarkDownEditorField, { label: "Card Details Text", value: form.card_detail_text, handleQuillChange: handleChangeEditor })))),
                         React.createElement(PictureInput_1["default"], { pictures: form.card_detail_pictures, handleChange: handleChange }),
                         React.createElement("button", { type: "submit", className: "px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline" }, "Insert New Card"))),
                 React.createElement("div", { className: "w-full space-y-4 md:w-2/3 lg:w-full" },
@@ -241,7 +250,7 @@ var HomePage = function () {
                         React.createElement("div", { className: "flex items-center" },
                             card.image_logo === "https://example.com/logo.png" ? (React.createElement("div", { className: "flex items-center justify-center w-16 h-16 mr-4 bg-gray-200" },
                                 React.createElement("span", { className: "text-gray-400" }, "No Image"))) : (React.createElement("img", { src: card.image_logo, alt: card.title, className: "object-cover w-16 h-16 max-w-full max-h-full mr-4" })),
-                            React.createElement("h2", { className: "flex-shrink-0 text-xl" }, card.title)),
+                            React.createElement("p", { dangerouslySetInnerHTML: { __html: card.title } })),
                         React.createElement("div", { className: "flex button-container" },
                             React.createElement("button", { onClick: function () { return handleEdit(card.id); }, className: "px-2 mr-1 bg-transparent rounded text-slate-400 hover:bg-teal-600 hover:text-white" }, "Edit"),
                             React.createElement("div", { className: "group" },
