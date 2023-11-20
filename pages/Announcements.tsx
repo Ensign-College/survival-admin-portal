@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import PictureInput from "../components/inputs/PictureInput";
 import {
   handleSendNotification,
   handleSendImageNotification,
@@ -94,26 +93,6 @@ const Announcements: React.FC = () => {
             Send Notification
           </button>
         </div>
-        {/* <div className="w-1/2 p-8 flex flex-col sm:justify-start">
-          <label htmlFor="imageUrl">Image URL:</label>
-          <input
-            className="bg-white shadow-md rounded px-8 pt-3 pb-20 mt-3 mb-4"
-            type="text"
-            id="imageUrl"
-            name="notificationImage"
-            placeholder="Image URL"
-            autoComplete="off"
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
-          />
-          <button
-            type="button" // Use type="button" to prevent form submission
-            className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover-bg-blue-700 focus:outline-none focus:shadow-outline"
-            onClick={handleCallNotifications} // Call the function when the button is clicked
-          >
-            Send Notification
-          </button>
-        </div> */}
       </div>
     </>
   );

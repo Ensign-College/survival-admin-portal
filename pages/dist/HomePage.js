@@ -79,22 +79,7 @@ var HomePage = function () {
     var toggleNotificationForm = function () {
         setIsNotificationFormVisible(!isNotificationFormVisible);
     };
-    var _e = react_1.useState(""), notificationTitle = _e[0], setNotificationTitle = _e[1];
-    var _f = react_1.useState(""), notificationDescription = _f[0], setNotificationDescription = _f[1];
-    var _g = react_1.useState(""), notificationImage = _g[0], setNotificationImage = _g[1];
-    var handleNotificationChange = function (e) {
-        var _a = e.target, name = _a.name, value = _a.value;
-        if (name === "notificationTitle") {
-            setNotificationTitle(value);
-        }
-        else if (name === "notificationDescription") {
-            setNotificationDescription(value);
-        }
-        else if (name === "notificationImage") {
-            setNotificationImage(value);
-        }
-    };
-    var _h = react_1.useState(false), isAuthenticated = _h[0], setIsAuthenticated = _h[1];
+    var _e = react_1.useState(false), isAuthenticated = _e[0], setIsAuthenticated = _e[1];
     var handleAuthenticated = function () {
         setIsAuthenticated(true);
     };
@@ -151,8 +136,8 @@ var HomePage = function () {
         setCurrentCard(card);
         setIsEditModalOpen(true);
     };
-    var _j = react_1.useState(false), isEditModalOpen = _j[0], setIsEditModalOpen = _j[1];
-    var _k = react_1.useState(null), currentCard = _k[0], setCurrentCard = _k[1];
+    var _f = react_1.useState(false), isEditModalOpen = _f[0], setIsEditModalOpen = _f[1];
+    var _g = react_1.useState(null), currentCard = _g[0], setCurrentCard = _g[1];
     var handleChange = function (e) {
         var _a;
         setForm(__assign(__assign({}, form), (_a = {}, _a[e.target.name] = e.target.value, _a)));
