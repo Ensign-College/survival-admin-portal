@@ -62,7 +62,8 @@ const EditForm: React.FC<EditFormProps> = ({
         value={localCard.card_detail_text}
         onChange={handleChange}
       />
-      {localCard !== null && Array.isArray(localCard.card_detail_pictures) && (
+      {/* {localCard !== null &&  */}
+      {/* {Array.isArray(localCard.card_detail_pictures) && (
         <PictureInput
           pictures={localCard.card_detail_pictures}
           handleChange={handleChange}
@@ -70,6 +71,14 @@ const EditForm: React.FC<EditFormProps> = ({
           onDataUpdate={(updatedData) => setPicturesArray(updatedData)}
         />
       )}
+    */}
+      <PictureInput
+          pictures={Array.isArray(localCard.card_detail_pictures)? localCard.card_detail_pictures:[]}
+          handleChange={handleChange}
+          handleDeleteImage={handleDeleteImage}
+          onDataUpdate={(updatedData) => setPicturesArray(updatedData)}
+        />
+     
       <button
         type="submit"
         className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"

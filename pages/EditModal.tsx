@@ -55,17 +55,17 @@ const EditModal: React.FC<EditModalProps> = ({
   useEffect(() => {
     let newItem = ''
     if (localCard) {
-      // const characters = localCard.card_detail_pictures
+    //   const characters = localCard.card_detail_pictures
 
-      // if (characters) {
-      //   for (let i = 0; i < characters.length; i++) {
-      //     newItem += characters[i]
-      //   }
-      // }
+    //   if (characters) {
+    //     for (let i = 0; i < characters.length; i++) {
+    //       newItem += characters[i]
+    //     }
+    //   }
 
-      //const updatedArray = [...picturesArray, newItem]
+    //   const updatedArray = [...picturesArray, newItem]
       setPicturesArray(localCard.card_detail_pictures)
-    }
+   }
   }, [localCard?.card_detail_pictures])
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -91,7 +91,7 @@ const EditModal: React.FC<EditModalProps> = ({
 
       // if (localCard.card_detail_pictures) {
       //   // Split the comma-separated string into an array
-      //   cardDetailPicturesArray = pictureArray.split(',').map((s) => s.trim())
+      //   cardDetailPicturesArray = picturesArray.split(',').map((s) => s.trim())
       // }
 
       // Update card details in Supabase
@@ -131,9 +131,13 @@ const EditModal: React.FC<EditModalProps> = ({
   const handleDeleteImage = (imageUrl: string) => {
     if (localCard) {
       const cardDetailPicturesArray = localCard.card_detail_pictures
-      const newCardDetailPictures = cardDetailPicturesArray.filter(
+      let newCardDetailPictures : string[] = []
+      if (Array.isArray(localCard.card_detail_pictures)) {
+        newCardDetailPictures = cardDetailPicturesArray.filter(
         (url: string) => url !== imageUrl,
       )
+      }
+      
       console.log('Before deletion:', localCard)
       console.log('After deletion:', {
         ...localCard,
