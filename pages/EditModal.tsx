@@ -17,7 +17,6 @@ const EditModal: React.FC<EditModalProps> = ({
   onSubmit,
   onUpdate,
 }) => {
-  console.log("card: ", card?.title);
   const [cardDetails, setCardDetails] = useState<CardDetails | null>(null);
   const [localCard, setLocalCard] = useState<Card | null>(card);
 
@@ -32,7 +31,7 @@ const EditModal: React.FC<EditModalProps> = ({
           setCardDetails(data);
         });
     }
-  }, [card]);
+  }, [card, supabase]);
 
   useEffect(() => {
     if (card && cardDetails) {
@@ -97,15 +96,6 @@ const EditModal: React.FC<EditModalProps> = ({
     onClose();
   };
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    if (localCard) {
-      const { name, value } = e.target;
-      setLocalCard({ ...localCard, [name]: value });
-    }
-  };
-
   const handleDeleteImage = (imageUrl: string) => {
     if (localCard) {
       const cardDetailPicturesArray = localCard.card_detail_pictures.split(",");
@@ -118,6 +108,24 @@ const EditModal: React.FC<EditModalProps> = ({
       });
     }
   };
+
+    const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        if (localCard) {
+            if (e.target === undefined){
+                // @ts-ignore
+                setLocalCard((prev) => {
+                    return {
+                        ...prev,
+                        card_detail_text: e
+                    }
+                })
+            }else {
+                const { name, value } = e.target;
+                setLocalCard({ ...localCard, [name]: value });
+            }
+        }
+    };
+
 
   return (
     <div className="modal-overlay">

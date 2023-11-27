@@ -1,7 +1,4 @@
 {
-    "cSpell.words": [
-        "nextjs",
-        "supabase",
-        "tailwindcss"
-    ]
+  "cSpell.words": ["nextjs", "supabase", "tailwindcss"],
+  "compile-hero.disable-compile-files-on-did-save-code": false
 }
