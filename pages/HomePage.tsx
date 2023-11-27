@@ -14,6 +14,7 @@ const supabase = createClient(
   SUPABASE_URL as string,
   SUPABASE_API_KEY as string
 );
+
 type Card = {
   id: number;
   title: string;

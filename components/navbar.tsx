@@ -70,6 +70,11 @@ return (
                 <a href="./EditModal">Edit</a>
               </li>
               <li>
+                <a href="./Login">Login</a>
+              </li><li>
+                <a href="./SignUp">SignUp</a>
+              </li>
+              <li>
                 <ToggleButton onChange={toggleTheme} />
               </li>
             </ul>
