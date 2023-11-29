@@ -1,19 +1,11 @@
 import { createClient } from "@supabase/supabase-js";
-import { useState, useEffect, ChangeEvent, FormEvent, useMemo} from "react";
+import { useState, useEffect, ChangeEvent, FormEvent, MouseEvent } from "react";
 import EditModal from "./EditModal";
 import { SUPABASE_API_KEY, SUPABASE_URL } from "../services/supabaseClients";
 import AuthForm from "./AuthForm";
 import PictureInput from "../components/inputs/PictureInput";
-import {
-  handleSendImageNotification,
-  handleSendNotification,
-} from "../services/notificationService";
-import Navbar from "../components/navbar";
-import "react-quill/dist/quill.snow.css";
-import dynamic from "next/dynamic";
-import {MarkDownEditorField} from "../components/inputs/InputComponents";
-
-
+import { Button } from "../components/Button";
+import PreviewModal from "./PreviewModal";
 
 const supabase = createClient(
   SUPABASE_URL as string,
@@ -25,7 +17,6 @@ type Card = {
   image_logo: string;
   card_detail_id: number;
 };
-
 const HomePage = () => {
   const [cards, setCards] = useState<Card[]>([]);
   const [form, setForm] = useState({
@@ -36,33 +27,26 @@ const HomePage = () => {
     card_detail_pictures: "", // Initialize the card detail pictures field
   });
   const [isCardDetailsTextOpen, setIsCardDetailsTextOpen] = useState(false);
-  const ReactQuill = useMemo(() => dynamic(() => import('react-quill'), { ssr: false }),[]);
 
+  // const [isPreviewMode, setPreviewMode] = useState(false); //setPreviewMode is a function that comes from the useState hook in React. It is used to update the state variable isPreviewMode. In the code I provided earlier, useState(false) initializes isPreviewMode to false, and setPreviewMode(true) is called in the handlePreview function to set isPreviewMode to true when the "Preview Card" button is clicked.
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
+  const [previewedCard, setPreviewedCard] = useState<Card | null>(null);
 
+  const handlePreview = (id: number) => {
+    const card = cards.find((card) => card.id === id);
+    if (!card) {
+      return;
+    }
+    // @ts-ignore
+    setCurrentCard(card);
+    console.log("card from handlePreview: ", currentCard);
+    setIsPreviewModalOpen(true);
+  };
 
   useEffect(() => {
     fetchCards();
   }, []);
-  const [isNotificationFormVisible, setIsNotificationFormVisible] =
-    useState(false);
-  const toggleNotificationForm = () => {
-    setIsNotificationFormVisible(!isNotificationFormVisible);
-  };
-  const [notificationTitle, setNotificationTitle] = useState("");
-  const [notificationDescription, setNotificationDescription] = useState("");
-  const [notificationImage, setNotificationImage] = useState("");
-  const handleNotificationChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    if (name === "notificationTitle") {
-      setNotificationTitle(value);
-    } else if (name === "notificationDescription") {
-      setNotificationDescription(value);
-    } else if (name === "notificationImage") {
-      setNotificationImage(value);
-    }
-  };
+
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   const handleAuthenticated = () => {
@@ -99,6 +83,7 @@ const HomePage = () => {
       setCards(cards.filter((card) => card.id !== id));
     }
   };
+
   const handleEdit = (id: number) => {
     // @ts-ignore
     const card = cards.find((card) => card.id === id);
@@ -110,28 +95,9 @@ const HomePage = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [currentCard, setCurrentCard] = useState(null);
 
-
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setForm({...form, [e.target.name]: e.target.value});
-    };
-    const handleChangeEditor = (e: ChangeEvent<HTMLInputElement>) => {
-        // @ts-ignore
-        setForm((prev) => {
-            return {
-                ...prev,
-                card_detail_text: e
-            }
-        })
-    };
-    const handleChangeTitleEditor = (e: ChangeEvent<HTMLInputElement>) => {
-        // @ts-ignore
-        setForm((prev) => {
-            return {
-                ...prev,
-                title: e
-            }
-        })
-    };
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -191,143 +157,88 @@ const HomePage = () => {
     );
   };
 
-    // @ts-ignore
-    const toggleCardDetailsText = (e) => {
-        e.preventDefault()
-        setIsCardDetailsTextOpen(!isCardDetailsTextOpen);
-    };
+  const toggleCardDetailsText = () => {
+    setIsCardDetailsTextOpen(!isCardDetailsTextOpen);
+  };
 
-
-
-    return (
-        <><Navbar></Navbar><div className="min-h-screen p-8">
-            <h1 className="pb-8 text-2xl font-bold">Welcome to Survival Admin Portal</h1>
-            {isAuthenticated ? (
-                <div className="flex flex-col p-2 pt-0 md:p-8 md:flex-row">
-                <div className='w-full pr-8 md:w-1/3 lg:w-full'>
-                    <h1 className="mb-4 text-4xl">New Card</h1>
-                    <form onSubmit={handleSubmit} className="mb-8">
-                        <div className="mb-4">
-                            <MarkDownEditorField label={"Title"} value={form.title} handleQuillChange={handleChangeTitleEditor}/>
-                        </div>
-                        <div className="mb-4">
-                            <label className="block mb-2 text-sm font-bold text-gray-700">Image Logo URL:</label>
-                            <input
-                                type="text"
-                                name="image_logo"
-                                value={form.image_logo}
-                                onChange={handleChange}
-                                className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block mb-2 text-sm font-bold text-gray-700">Card details id:</label>
-                            <input
-                                type="number"
-                                name="card_detail_id"
-                                value={form.card_detail_id}
-                                onChange={handleChange}
-                                className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <button onClick={(e)=> toggleCardDetailsText(e)}
-                                    className="text-blue-500 hover:underline">
-                                {isCardDetailsTextOpen ? "Collapse" : "Add Card Details Text"}
-                            </button>
-                            {isCardDetailsTextOpen && (
-                                <div className="mt-2">
-                                    <MarkDownEditorField label={"Card Details Text"} value={form.card_detail_text} handleQuillChange={handleChangeEditor}/>
-                                </div>
-                            )}
-                        </div>
-                        <PictureInput pictures={form.card_detail_pictures} handleChange={handleChange} />
-                        <button
-                            type="submit"
-                            className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
-                        >
-                            Insert New Card
-                        </button>
-                    </form>
-                    <div className='w-full pr-8 md:w-1/3 lg:w-full'>
-                        <button
-                            onClick={toggleNotificationForm}
-                            className="px-4 py-2 mb-4 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
-                        >
-                            Notifications
-                        </button>
-
-              {isNotificationFormVisible && (
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    if (notificationImage) {
-                      // Call handleSendImageNotification if notificationImage has text
-                      handleSendImageNotification(
-                        "all",
-                        notificationTitle,
-                        notificationDescription,
-                        notificationImage
-                      );
-                    } else {
-                      // Call handleSendNotification otherwise
-                      handleSendNotification(
-                        "all",
-                        notificationTitle,
-                        notificationDescription
-                      );
-                    }
-                  } }
-                  className="mb-8"
-                  autoComplete="off"
+  return (
+    <div className="min-h-screen p-8 bg-white">
+      <h1 className="pb-8 text-2xl font-bold">
+        Welcome to Survival Admin Portal
+      </h1>
+      {isAuthenticated ? (
+        <div className="p-2 md:p-8 pt-0 flex flex-col md:flex-row">
+          <div className="w-full pr-8 md:w-1/3 lg:w-full">
+            <h1 className="mb-4 text-4xl">New Card</h1>
+            <form onSubmit={handleSubmit} className="mb-8">
+              <div className="mb-4">
+                <label className="block mb-2 text-sm font-bold text-gray-700">
+                  Title:
+                </label>
+                <input
+                  type="text"
+                  name="title"
+                  value={form.title}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block mb-2 text-sm font-bold text-gray-700">
+                  Image Logo URL:
+                </label>
+                <input
+                  type="text"
+                  name="image_logo"
+                  value={form.image_logo}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block mb-2 text-sm font-bold text-gray-700">
+                  Card details id:
+                </label>
+                <input
+                  type="number"
+                  name="card_detail_id"
+                  value={form.card_detail_id}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                />
+              </div>
+              <div className="mb-4">
+                <button
+                  onClick={toggleCardDetailsText}
+                  className="text-blue-500 hover:underline"
                 >
-                  <div className="mb-4">
+                  {isCardDetailsTextOpen ? "Collapse" : "Add Card Details Text"}
+                </button>
+                {isCardDetailsTextOpen && (
+                  <div className="mt-2">
                     <label className="block mb-2 text-sm font-bold text-gray-700">
-                      Title:
-                    </label>
-                    <input
-                      autoComplete="off"
-                      type="text"
-                      name="notificationTitle"
-                      value={notificationTitle}
-                      onChange={handleNotificationChange}
-                      className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline" />
-                  </div>
-                  <div className="mb-4">
-                    <label className="block mb-2 text-sm font-bold text-gray-700">
-                      Description:
+                      Card Details Text:
                     </label>
                     <textarea
-                      autoComplete="off"
-                      name="notificationDescription"
-                      value={notificationDescription}
-                      onChange={handleNotificationChange}
+                      name="card_detail_text"
+                      value={form.card_detail_text}
+                      // @ts-ignore
+                      onChange={handleChange}
                       className="w-full h-32 px-3 py-2 text-gray-700 border rounded shadow appearance-none resize-y focus:outline-none focus:shadow-outline"
                     ></textarea>
                   </div>
-                  <div className="mb-4">
-                    <label className="block mb-2 text-sm font-bold text-gray-700">
-                      Image URL:
-                    </label>
-                    <input
-                      autoComplete="off"
-                      type="text"
-                      name="notificationImage"
-                      value={notificationImage}
-                      onChange={handleNotificationChange}
-                      className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline" />
-                  </div>
-                  <button
-                    type="submit"
-                    className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
-                  >
-                    Send Notification
-                  </button>
-                </form>
-              )}
-            </div>
-          </div>
+                )}
+              </div>
+              <PictureInput
+                pictures={form.card_detail_pictures}
+                handleChange={handleChange}
+              />
 
+              <Button text="Primary" color="primary" type="submit">
+                Insert New Card
+              </Button>
+            </form>
+          </div>
           <div className="w-full space-y-4 md:w-2/3 lg:w-full">
             <h1 className="mb-4 text-4xl">Current Cards</h1>
             {cards.map((card, index) => (
@@ -345,21 +256,34 @@ const HomePage = () => {
                     <img
                       src={card.image_logo}
                       alt={card.title}
-                      className="object-cover w-16 h-16 max-w-full max-h-full mr-4" />
+                      className="object-cover w-16 h-16 max-w-full max-h-full mr-4"
+                    />
                   )}
-                    <p dangerouslySetInnerHTML={{__html: card.title}}/>
+
+                  <h2 className="flex-shrink-0 text-xl">{card.title}</h2>
                 </div>
                 <div className="flex button-container">
-                  <button
+                  <Button
+                    text="Preview"
+                    color="secondary"
+                    onClick={() => handlePreview(card.id)}
+                  >
+                    Preview
+                  </Button>
+
+                  <Button
+                    text="Edit"
+                    color="secondary"
                     onClick={() => handleEdit(card.id)}
-                    className="px-2 mr-1 bg-transparent rounded text-slate-400 hover:bg-teal-600 hover:text-white"
                   >
                     Edit
-                  </button>
+                  </Button>
+
                   <div className="group">
-                    <button
+                    <Button
+                      text="Delete"
+                      color="third"
                       onClick={() => handleDelete(card.id)}
-                      className="px-2 py-1 text-white bg-transparent rounded group-hover:bg-red-400 group-hover:text-white"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -369,31 +293,40 @@ const HomePage = () => {
                         className="w-6 h-6 text-red-600 group-hover:fill-red-600 group-hover:text-white"
                       >
                         <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
                       </svg>
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </div>
             ))}
-
-            {isEditModalOpen && (
-              <EditModal
-                card={currentCard}
-                supabase={supabase}
-                onClose={() => setIsEditModalOpen(false)}
-                onUpdate={handleCardUpdate}
-                onSubmit={handleEdit} />
-            )}
           </div>
+
+          {isPreviewModalOpen && (
+            <PreviewModal
+              card={currentCard}
+              onClose={() => setIsPreviewModalOpen(false)}
+            />
+          )}
+
+          {isEditModalOpen && (
+            <EditModal
+              card={currentCard}
+              supabase={supabase}
+              onClose={() => setIsEditModalOpen(false)}
+              onUpdate={handleCardUpdate}
+              onSubmit={handleEdit}
+            />
+          )}
         </div>
       ) : (
         <AuthForm onAuthenticated={handleAuthenticated} />
       )}
-    </div></>
+    </div>
   );
 };
 

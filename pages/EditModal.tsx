@@ -96,6 +96,18 @@ const EditModal: React.FC<EditModalProps> = ({
     onClose();
   };
 
+  const handleDeleteImage = (imageUrl: string) => {
+    if (localCard) {
+      const cardDetailPicturesArray = localCard.card_detail_pictures.split(",");
+      const newCardDetailPictures = cardDetailPicturesArray
+        .filter((url: string) => url !== imageUrl)
+        .join(",");
+      setLocalCard({
+        ...localCard,
+        card_detail_pictures: newCardDetailPictures,
+      });
+    }
+  };
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         if (localCard) {
@@ -114,18 +126,6 @@ const EditModal: React.FC<EditModalProps> = ({
         }
     };
 
-  const handleDeleteImage = (imageUrl: string) => {
-    if (localCard) {
-      const cardDetailPicturesArray = localCard.card_detail_pictures.split(",");
-      const newCardDetailPictures = cardDetailPicturesArray
-        .filter((url: string) => url !== imageUrl)
-        .join(",");
-      setLocalCard({
-        ...localCard,
-        card_detail_pictures: newCardDetailPictures,
-      });
-    }
-  };
 
   return (
     <div className="modal-overlay">
