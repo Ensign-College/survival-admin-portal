@@ -55,13 +55,10 @@ const SignUp = () => {
     style={{ backgroundColor: "#006241" }}
     onSubmit={handleSubmit}
   >
-    {/* Sign-up form takes the whole right side with a background color */}
     <div className="h-full flex flex-col justify-center items-center">
-      {/* Center the content vertically in the form area */}
       <h2 className="text-2xl font-semibold mb-2 text-white text-center">
         Sign Up
       </h2>{" "}
-      {/* Center the "Sign Up" header both horizontally and vertically */}
       <div className="space-y-4 w-6/12 ">
         <div>
           <label
@@ -118,7 +115,6 @@ const SignUp = () => {
           />
         </div>
         <div className="text-center">
-          {/* Center the content horizontally */}
           <button
             type="submit"
             className="w-full bg-[#006241] text-white font-semibold py-2 rounded-md hover:bg-blue-600 border border-white"
