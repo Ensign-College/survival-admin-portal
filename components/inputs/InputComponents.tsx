@@ -35,7 +35,10 @@ const MarkDownEditorTitleField = ({ label, value, handleQuillChange}) =>{
     const ReactQuill = useMemo(() => dynamic(() => import('react-quill'), { ssr: false }),[]);
 
     const TOOLBAR_OPTIONS = [
-        ["bold", "italic", "underline", "strike", "blockquote", "link"],
+        ["bold", "italic", "underline", "strike", "blockquote", "link", "clean"],
+        [{ 'color': [] }, { 'background': [] }], //text font & background color
+        [{ 'header': 1 }, { 'header': 2 }], //text size
+        [{ 'size': [] }], //manual text size
     ];
 
     const handleQuillChangeInternal = (newValue: any) => {
@@ -71,7 +74,10 @@ const MarkDownEditorField = ({ label, value, handleQuillChange}) =>{
     const ReactQuill = useMemo(() => dynamic(() => import('react-quill'), { ssr: false }),[]);
 
     const TOOLBAR_OPTIONS = [
-        ["bold", "italic", "underline", "strike", "blockquote", "link"],
+        ["bold", "italic", "underline", "strike", "blockquote", "link", "clean"],
+        [{ 'color': [] }, { 'background': [] }], //text font & background color
+        [{ 'header': 1 }, { 'header': 2 }], //text size
+        [{ 'size': [] }], //manual text size
     ];
 
     return (
